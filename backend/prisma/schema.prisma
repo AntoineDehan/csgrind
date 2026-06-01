@@ -1,0 +1,174 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  name      String   @db.VarChar(50)
+  steam64Id String?  @map("steam64_id") @db.VarChar(17)
+  image     String?  @db.VarChar(500)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  goals  Goal[]
+  badges UserBadge[]
+
+  @@map("users")
+}
+
+enum Matchmaking {
+  FACEIT
+  PREMIER
+}
+
+enum GoalStatus {
+  in_progress
+  completed
+  abandoned
+
+  @@map("goal_status")
+}
+
+model Goal {
+  id          String    @id @default(uuid())
+  matchmaking Matchmaking   
+  eloGoal     Int       @map("elo_goal")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  endDate     DateTime? @map("end_date")
+  status      GoalStatus   @default(in_progress)
+
+  userId  String @map("user_id")
+  user    User   @relation(fields: [userId], references: [id])
+
+  reports Report[]
+
+  @@map("goals")
+}
+
+model Report {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Ratings
+  aimRating         Decimal? @map("aim_rating") @db.Decimal(8, 4)
+  utilityRating     Decimal? @map("utility_rating") @db.Decimal(8, 4)
+  positioningRating Decimal? @map("positioning_rating") @db.Decimal(8, 4)
+  leetifyRating     Decimal? @map("leetify_rating") @db.Decimal(8, 4)
+
+  // Ranks
+  premierRank Int? @map("premier_rank")
+  faceitRank  Int? @map("faceit_rank")
+
+  // Stats
+  accuracyHead         Decimal? @map("accuracy_head") @db.Decimal(8, 4)
+  accuracyEnemySpotted Decimal? @map("accuracy_enemy_spotted") @db.Decimal(8, 4)
+  sprayAccuracy        Decimal? @map("spray_accuracy") @db.Decimal(8, 4)
+  counterStrafingRatio Decimal? @map("counter_strafing_ratio") @db.Decimal(8, 4)
+  preaim               Decimal? @db.Decimal(8, 4)
+  reactionTimeMs       Decimal? @map("reaction_time_ms") @db.Decimal(8, 4)
+
+  // Utility
+  flashHitPerFlash   Decimal? @map("flash_hit_per_flash") @db.Decimal(8, 4)
+  flashAvgDuration   Decimal? @map("flash_avg_duration") @db.Decimal(8, 4)
+  flashLeadingToKill Decimal? @map("flash_leading_to_kill") @db.Decimal(8, 4)
+  heFoesDamageAvg    Decimal? @map("he_foes_damage_avg") @db.Decimal(8, 4)
+  utilityOnDeathAvg  Decimal? @map("utility_on_death_avg") @db.Decimal(8, 4)
+
+  // Duels & trades
+  ctOpeningSuccess   Decimal? @map("ct_opening_success") @db.Decimal(8, 4)
+  tOpeningSuccess    Decimal? @map("t_opening_success") @db.Decimal(8, 4)
+  tradeKillsSuccess  Decimal? @map("trade_kills_success") @db.Decimal(8, 4)
+  tradeDeathsSuccess Decimal? @map("traded_deaths_success") @db.Decimal(8, 4)
+
+  // General
+  winrate      Decimal? @db.Decimal(5, 4)
+  totalMatches Int?     @map("total_matches")
+
+  // Relations
+  goalId String @map("goal_id")
+  goal   Goal   @relation(fields: [goalId], references: [id])
+
+  tips      ReportTip[]
+  tasks     ReportTask[]
+
+  @@map("reports")
+}
+
+model Tip {
+  id       String @id @default(uuid())
+  category String @db.VarChar(30)
+  priority Int    @db.SmallInt
+  content  String @db.Text
+
+  reports ReportTip[]
+
+  @@map("tips")
+}
+
+model ReportTip {
+  reportId String @map("report_id")
+  tipId    String @map("tip_id")
+
+  report Report @relation(fields: [reportId], references: [id])
+  tip    Tip    @relation(fields: [tipId], references: [id])
+
+  @@id([reportId, tipId])
+  @@map("report_tips")
+}
+
+model Task {
+  id          String  @id @default(uuid())
+  content     String  @db.Text
+  isTrackable Boolean @default(false) @map("is_trackable")
+  taskStat    String? @map("task_stat") @db.VarChar(50)
+  trackMap    String? @map("track_map") @db.VarChar(30)
+
+  reports ReportTask[]
+
+  @@map("tasks")
+}
+
+model ReportTask {
+  reportId     String   @map("report_id")
+  taskId       String   @map("task_id")
+  isCompleted  Boolean  @default(false) @map("is_completed")
+  trackCurrent Decimal? @map("track_current") @db.Decimal(10, 4)
+  trackTarget  Decimal? @map("track_target") @db.Decimal(10, 4)
+
+  report Report @relation(fields: [reportId], references: [id])
+  task   Task   @relation(fields: [taskId], references: [id])
+
+  @@id([reportId, taskId])
+  @@map("report_tasks")
+}
+
+model Badge {
+  id          String @id @default(uuid())
+  name        String @db.VarChar(100)
+  description String @db.Text
+  icon        String @db.VarChar(500)
+
+  users UserBadge[]
+
+  @@map("badges")
+}
+
+model UserBadge {
+  obtainedAt DateTime @default(now()) @map("obtained_at")
+
+  userId  String @map("user_id")
+  badgeId String @map("badge_id")
+
+  user  User  @relation(fields: [userId], references: [id])
+  badge Badge @relation(fields: [badgeId], references: [id])
+
+  @@unique([userId, badgeId])
+  @@map("user_badges")
+}
