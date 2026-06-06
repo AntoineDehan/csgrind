@@ -5,23 +5,31 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "dev": "tsx watch app.ts",
+    "start": "tsx app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "antoineDehan",
   "license": "ISC",
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.9.1",
     "@types/pg": "^8.20.0",
-    "prisma": "^7.8.0",
+    "prisma": "^6.19.3",
     "tsx": "^4.22.3",
     "typescript": "^6.0.3"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.8.0",
-    "@prisma/client": "^7.8.0",
+    "@prisma/adapter-pg": "^6.19.3",
+    "@prisma/client": "^6.19.3",
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "pg": "^8.21.0"
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.21.0",
+    "zod": "^4.4.3"
   }
 }
