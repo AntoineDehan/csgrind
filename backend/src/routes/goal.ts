@@ -1,0 +1,13 @@
+import { Router } from "express";
+import * as goalController from "../controllers/goal.controller";
+import { authenticate } from "../middlewares/auth.middleware";
+
+const router = Router();
+
+router.get("/", authenticate, goalController.getGoals);
+router.get("/:id", authenticate, goalController.getGoal);
+router.post("/", authenticate, goalController.postGoal);
+router.patch("/:id", authenticate, goalController.patchGoal);
+router.delete("/:id", authenticate, goalController.removeGoal);
+
+export default router;
