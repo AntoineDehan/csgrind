@@ -29,11 +29,15 @@ export async function steamReturn(req: Request, res: Response) {
     return;
   }
 
-  const { userId } = verifyToken(state);
-  const steam64Id = await verifySteamReturn(
-    req.query as Record<string, string>,
-  );
+  try {
+    const { userId } = verifyToken(state);
+    const steam64Id = await verifySteamReturn(
+      req.query as Record<string, string>,
+    );
 
-  await userService.updateUser(userId, { steam64Id });
-  res.json({ message: "Steam linked", steam64Id });
+    await userService.updateUser(userId, { steam64Id });
+    res.json({ message: "Steam linked", steam64Id });
+  } catch (err) {
+    res.status(401).json({ message: "Steam authentication failed" });
+  }
 }
