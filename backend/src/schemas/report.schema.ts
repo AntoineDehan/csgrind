@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+export const generateReportSchema = z.object({
+  goalId: z.uuid(),
+});
+
+export type GenerateReportInput = z.infer<typeof generateReportSchema>;
+
 export const createReportSchema = z.object({
   goalId: z.uuid(),
   aimRating: z.number().optional(),

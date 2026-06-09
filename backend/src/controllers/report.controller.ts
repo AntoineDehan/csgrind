@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import * as reportService from "../services/report.service";
-import { createReportSchema } from "../schemas/report.schema";
+import { generateReportSchema } from "../schemas/report.schema";
 
 export async function getReports(req: Request, res: Response) {
   const reports = await reportService.findAllReports();
@@ -23,15 +23,30 @@ export async function getReport(req: Request, res: Response) {
   res.json(report);
 }
 
-export async function postReport(req: Request, res: Response) {
-  const result = createReportSchema.safeParse(req.body);
+export async function generate(req: Request, res: Response) {
+  const userId = req.userId;
+  if (!userId) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+
+  const result = generateReportSchema.safeParse(req.body);
   if (!result.success) {
     res.status(400).json({ errors: result.error.issues });
     return;
   }
 
-  const report = await reportService.createReport(result.data);
-  res.status(201).json(report);
+  try {
+    const report = await reportService.generateReport(
+      userId,
+      result.data.goalId,
+    );
+    res.status(201).json(report);
+  } catch (err) {
+    res.status(400).json({
+      message: err instanceof Error ? err.message : "Report generation failed",
+    });
+  }
 }
 
 export async function patchReport(req: Request, res: Response) {

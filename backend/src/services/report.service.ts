@@ -3,6 +3,7 @@ import type { Prisma } from "../../generated/prisma/client";
 import type { CreateReportInput } from "../schemas/report.schema";
 import { fetchLeetifyProfile } from "../lib/leetify";
 import { mapProfileToReport } from "../mappers/report_mapper";
+import { findUserById } from "./user.service";
 
 export function findAllReports() {
   return prisma.report.findMany();
@@ -18,8 +19,12 @@ export function createReport(data: CreateReportInput) {
   });
 }
 
-export async function generateReport(steam64Id: string, goalId: string) {
-  const leetifyProfile = await fetchLeetifyProfile(steam64Id);
+export async function generateReport(userId: string, goalId: string) {
+  const user = await findUserById(userId);
+  const steamId = user?.steam64Id;
+  if (!steamId) throw new Error("User has not linked its Steam account");
+
+  const leetifyProfile = await fetchLeetifyProfile(steamId);
   if (leetifyProfile.privacy_mode === "private")
     throw new Error("Leetify profile private");
   const mappedStats = mapProfileToReport(leetifyProfile, goalId);
