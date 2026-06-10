@@ -24,3 +24,10 @@ export function updateGoal(id: string, data: UpdateGoalInput) {
 export function deleteGoal(id: string) {
   return prisma.goal.delete({ where: { id } });
 }
+
+export function checkToUpdateGoal() {
+  return prisma.goal.findMany({
+    where: { status: "in_progress", user: { steam64Id: { not: null } } },
+    include: { reports: { orderBy: { createdAt: "desc" }, take: 1 } },
+  });
+}
