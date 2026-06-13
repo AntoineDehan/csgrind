@@ -10,7 +10,10 @@ export function findUserById(id: string) {
 }
 
 export function findUserByEmail(email: string) {
-  return prisma.user.findUnique({ where: { email } });
+  return prisma.user.findUnique({
+    where: { email },
+    omit: { password: false },
+  });
 }
 
 export function createUser(data: Prisma.UserCreateInput) {

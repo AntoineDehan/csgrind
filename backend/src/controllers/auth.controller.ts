@@ -12,9 +12,7 @@ export async function register(req: Request, res: Response) {
 
   const user = await authService.registerUser(result.data);
 
-  const { password, ...safeUser } = user;
-
-  res.status(201).json(safeUser);
+  res.status(201).json(user);
 }
 
 export async function login(req: Request, res: Response) {
@@ -44,6 +42,5 @@ export async function me(req: Request, res: Response) {
     return;
   }
 
-  const { password, ...safeUser } = user;
-  res.json(safeUser);
+  res.json(user);
 }
