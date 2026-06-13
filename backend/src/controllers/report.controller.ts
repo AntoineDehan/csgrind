@@ -1,6 +1,9 @@
 import type { Request, Response } from "express";
 import * as reportService from "../services/report.service";
-import { generateReportSchema } from "../schemas/report.schema";
+import {
+  generateReportSchema,
+  updateReportSchema,
+} from "../schemas/report.schema";
 import {
   BadRequestError,
   NotFoundError,
@@ -32,13 +35,8 @@ export async function generate(req: Request, res: Response) {
     throw new UnauthorizedError();
   }
 
-  const result = generateReportSchema.safeParse(req.body);
-  if (!result.success) {
-    res.status(400).json({ errors: result.error.issues });
-    return;
-  }
-
-  const report = await reportService.generateReport(userId, result.data.goalId);
+  const data = generateReportSchema.parse(req.body);
+  const report = await reportService.generateReport(userId, data.goalId);
   res.status(201).json(report);
 }
 
@@ -48,7 +46,8 @@ export async function patchReport(req: Request, res: Response) {
     throw new BadRequestError("Invalid id");
   }
 
-  const report = await reportService.updateReport(id, req.body);
+  const data = updateReportSchema.parse(req.body);
+  const report = await reportService.updateReport(id, data);
   res.json(report);
 }
 

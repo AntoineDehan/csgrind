@@ -40,6 +40,6 @@ export async function steamReturn(req: Request, res: Response) {
     throw new UnauthorizedError("Steam authentication failed");
   }
 
-  await userService.updateUser(userId, { steam64Id });
+  await userService.linkSteamAccount(userId, steam64Id);
   res.json({ message: "Steam linked", steam64Id });
 }

@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import * as tipService from "../services/tip.service";
-import { createTipSchema } from "../schemas/tip.schema";
+import { createTipSchema, updateTipSchema } from "../schemas/tip.schema";
 import { BadRequestError, NotFoundError } from "../errors/AppError";
 
 export async function getTips(req: Request, res: Response) {
@@ -23,13 +23,8 @@ export async function getTip(req: Request, res: Response) {
 }
 
 export async function postTip(req: Request, res: Response) {
-  const result = createTipSchema.safeParse(req.body);
-  if (!result.success) {
-    res.status(400).json({ errors: result.error.issues });
-    return;
-  }
-
-  const tip = await tipService.createTip(result.data);
+  const data = createTipSchema.parse(req.body);
+  const tip = await tipService.createTip(data);
   res.status(201).json(tip);
 }
 
@@ -39,7 +34,8 @@ export async function patchTip(req: Request, res: Response) {
     throw new BadRequestError("Invalid id");
   }
 
-  const tip = await tipService.updateTip(id, req.body);
+  const data = updateTipSchema.parse(req.body);
+  const tip = await tipService.updateTip(id, data);
   res.json(tip);
 }
 

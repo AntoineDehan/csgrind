@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import { ZodError } from "zod";
 import { Prisma } from "../../generated/prisma/client";
 import { AppError } from "../errors/AppError";
 
@@ -10,6 +11,11 @@ export function errorHandler(
 ) {
   if (err instanceof AppError) {
     res.status(err.statusCode).json({ message: err.message });
+    return;
+  }
+
+  if (err instanceof ZodError) {
+    res.status(400).json({ message: "Validation failed", errors: err.issues });
     return;
   }
 

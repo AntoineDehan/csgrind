@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import * as badgeService from "../services/badge.service";
-import { createBadgeSchema } from "../schemas/badge.schema";
+import { createBadgeSchema, updateBadgeSchema } from "../schemas/badge.schema";
 import { BadRequestError, NotFoundError } from "../errors/AppError";
 
 export async function getBadges(req: Request, res: Response) {
@@ -23,13 +23,8 @@ export async function getBadge(req: Request, res: Response) {
 }
 
 export async function postBadge(req: Request, res: Response) {
-  const result = createBadgeSchema.safeParse(req.body);
-  if (!result.success) {
-    res.status(400).json({ errors: result.error.issues });
-    return;
-  }
-
-  const badge = await badgeService.createBadge(result.data);
+  const data = createBadgeSchema.parse(req.body);
+  const badge = await badgeService.createBadge(data);
   res.status(201).json(badge);
 }
 
@@ -39,7 +34,8 @@ export async function patchBadge(req: Request, res: Response) {
     throw new BadRequestError("Invalid id");
   }
 
-  const badge = await badgeService.updateBadge(id, req.body);
+  const data = updateBadgeSchema.parse(req.body);
+  const badge = await badgeService.updateBadge(id, data);
   res.json(badge);
 }
 

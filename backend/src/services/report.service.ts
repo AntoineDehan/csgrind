@@ -1,6 +1,9 @@
 import { prisma } from "../../prisma/lib/prisma";
 import type { Prisma } from "../../generated/prisma/client";
-import type { CreateReportInput } from "../schemas/report.schema";
+import type {
+  CreateReportInput,
+  UpdateReportInput,
+} from "../schemas/report.schema";
 import { fetchLeetifyProfile } from "../lib/leetify";
 import { mapProfileToReport } from "../mappers/report_mapper";
 import { findUserById } from "./user.service";
@@ -64,11 +67,11 @@ async function attachTasks(report: Report) {
   });
 }
 
-export function updateReport(
-  id: string,
-  data: Prisma.ReportUncheckedUpdateInput,
-) {
-  return prisma.report.update({ where: { id }, data });
+export function updateReport(id: string, data: UpdateReportInput) {
+  return prisma.report.update({
+    where: { id },
+    data: data as Prisma.ReportUncheckedUpdateInput,
+  });
 }
 
 export function deleteReport(id: string) {

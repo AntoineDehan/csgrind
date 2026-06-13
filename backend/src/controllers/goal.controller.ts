@@ -24,13 +24,8 @@ export async function getGoal(req: Request, res: Response) {
 }
 
 export async function postGoal(req: Request, res: Response) {
-  const result = createGoalSchema.safeParse(req.body);
-  if (!result.success) {
-    res.status(400).json({ errors: result.error.issues });
-    return;
-  }
-
-  const goal = await goalService.createGoal(result.data);
+  const data = createGoalSchema.parse(req.body);
+  const goal = await goalService.createGoal(data);
   res.status(201).json(goal);
 }
 
@@ -40,13 +35,8 @@ export async function patchGoal(req: Request, res: Response) {
     throw new BadRequestError("Invalid id");
   }
 
-  const result = updateGoalSchema.safeParse(req.body);
-  if (!result.success) {
-    res.status(400).json({ errors: result.error.issues });
-    return;
-  }
-
-  const goal = await goalService.updateGoal(id, result.data);
+  const data = updateGoalSchema.parse(req.body);
+  const goal = await goalService.updateGoal(id, data);
   res.json(goal);
 }
 

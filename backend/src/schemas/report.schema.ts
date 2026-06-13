@@ -34,3 +34,7 @@ export const createReportSchema = z.object({
 });
 
 export type CreateReportInput = z.infer<typeof createReportSchema>;
+
+export const updateReportSchema = createReportSchema.omit({ goalId: true });
+
+export type UpdateReportInput = z.infer<typeof updateReportSchema>;

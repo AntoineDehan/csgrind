@@ -5,25 +5,15 @@ import { registerUserSchema, loginUserSchema } from "../schemas/auth.schema";
 import { NotFoundError, UnauthorizedError } from "../errors/AppError";
 
 export async function register(req: Request, res: Response) {
-  const result = registerUserSchema.safeParse(req.body);
-  if (!result.success) {
-    res.status(400).json({ errors: result.error.issues });
-    return;
-  }
-
-  const user = await authService.registerUser(result.data);
+  const data = registerUserSchema.parse(req.body);
+  const user = await authService.registerUser(data);
 
   res.status(201).json(user);
 }
 
 export async function login(req: Request, res: Response) {
-  const result = loginUserSchema.safeParse(req.body);
-  if (!result.success) {
-    res.status(400).json({ errors: result.error.issues });
-    return;
-  }
-
-  const token = await authService.loginUser(result.data);
+  const data = loginUserSchema.parse(req.body);
+  const token = await authService.loginUser(data);
   res.json({ token });
 }
 

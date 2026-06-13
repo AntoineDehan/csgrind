@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import * as userService from "../services/user.service";
 import { BadRequestError, NotFoundError } from "../errors/AppError";
+import { updateUserSchema } from "../schemas/user.schema";
 
 export async function getUsers(req: Request, res: Response) {
   const users = await userService.findAllUsers();
@@ -28,7 +29,8 @@ export async function patchUser(req: Request, res: Response) {
     throw new BadRequestError("Invalid id");
   }
 
-  const user = await userService.updateUser(id, req.body);
+  const data = updateUserSchema.parse(req.body);
+  const user = await userService.updateUser(id, data);
   res.json(user);
 }
 
