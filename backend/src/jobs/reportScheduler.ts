@@ -5,7 +5,7 @@ import { generateReport } from "../services/report.service";
 type DueGoal = Awaited<ReturnType<typeof checkToUpdateGoal>>[number];
 
 export function isGoalDue(goal: DueGoal, now: Date): boolean {
-  const base = goal.reports[0]?.createdAt ?? goal.createdAt;
+  const base = goal.lastReportAt ?? goal.createdAt;
   return addDays(base, FREQUENCY_DAYS[goal.reportFrequency]) <= now;
 }
 
