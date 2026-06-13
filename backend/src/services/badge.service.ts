@@ -1,6 +1,9 @@
 import { prisma } from "../../prisma/lib/prisma";
 import type { Prisma } from "../../generated/prisma/client";
-import type { CreateBadgeInput } from "../schemas/badge.schema";
+import type {
+  CreateBadgeInput,
+  UpdateBadgeInput,
+} from "../schemas/badge.schema";
 
 export function findAllBadges() {
   return prisma.badge.findMany();
@@ -16,8 +19,11 @@ export function createBadge(data: CreateBadgeInput) {
   });
 }
 
-export function updateBadge(id: string, data: Prisma.BadgeUncheckedUpdateInput) {
-  return prisma.badge.update({ where: { id }, data });
+export function updateBadge(id: string, data: UpdateBadgeInput) {
+  return prisma.badge.update({
+    where: { id },
+    data: data as Prisma.BadgeUncheckedUpdateInput,
+  });
 }
 
 export function deleteBadge(id: string) {

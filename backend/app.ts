@@ -1,7 +1,7 @@
 import express from "express";
 import cron from "node-cron";
-import type { NextFunction, Request, Response } from "express";
 import { runReportScheduler } from "./src/jobs/reportScheduler";
+import { errorHandler } from "./src/middlewares/error.middleware";
 import userRouter from "./src/routes/user";
 import authRouter from "./src/routes/auth";
 import tipRouter from "./src/routes/tip";
@@ -33,10 +33,7 @@ app.use("/goals", goalRouter);
 
 app.use("/reports", reportRouter);
 
-app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
-  console.error(err);
-  res.status(500).json({ message: "Server error" });
-});
+app.use(errorHandler);
 
 cron.schedule(
   "0 13 * * *",

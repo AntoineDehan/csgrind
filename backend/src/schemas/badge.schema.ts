@@ -7,3 +7,7 @@ export const createBadgeSchema = z.object({
 });
 
 export type CreateBadgeInput = z.infer<typeof createBadgeSchema>;
+
+export const updateBadgeSchema = createBadgeSchema.partial();
+
+export type UpdateBadgeInput = z.infer<typeof updateBadgeSchema>;

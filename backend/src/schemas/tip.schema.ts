@@ -7,3 +7,7 @@ export const createTipSchema = z.object({
 });
 
 export type CreateTipInput = z.infer<typeof createTipSchema>;
+
+export const updateTipSchema = createTipSchema.partial();
+
+export type UpdateTipInput = z.infer<typeof updateTipSchema>;
