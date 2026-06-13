@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import * as goalService from "../services/goal.service";
-import { createGoalSchema } from "../schemas/goal.schema";
+import * as reportService from "../services/report.service";
+import { createGoalSchema, updateGoalSchema } from "../schemas/goal.schema";
 
 export async function getGoals(req: Request, res: Response) {
   const goals = await goalService.findAllGoals();
@@ -41,8 +42,30 @@ export async function patchGoal(req: Request, res: Response) {
     return;
   }
 
-  const goal = await goalService.updateGoal(id, req.body);
+  const result = updateGoalSchema.safeParse(req.body);
+  if (!result.success) {
+    res.status(400).json({ errors: result.error.issues });
+    return;
+  }
+
+  const goal = await goalService.updateGoal(id, result.data);
   res.json(goal);
+}
+
+export async function getProgress(req: Request, res: Response) {
+  const id = req.params.id;
+  if (typeof id !== "string") {
+    res.status(400).json({ message: "Invalid id" });
+    return;
+  }
+
+  const progress = await reportService.getGoalProgress(id);
+  if (!progress) {
+    res.status(404).json({ message: "Not enough reports to compare" });
+    return;
+  }
+
+  res.json(progress);
 }
 
 export async function removeGoal(req: Request, res: Response) {

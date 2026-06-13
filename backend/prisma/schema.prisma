@@ -13,7 +13,7 @@ model User {
   email     String   @unique @db.VarChar(255)
   password  String   @db.VarChar(255)
   name      String?   @db.VarChar(50)
-  steam64Id String?  @map("steam64_id") @db.VarChar(17)
+  steam64Id String?  @unique @map("steam64_id") @db.VarChar(17)
   image     String?  @db.VarChar(500)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -37,6 +37,16 @@ enum GoalStatus {
   @@map("goal_status")
 }
 
+enum ReportFrequency {
+  DAYS_2
+  DAYS_5
+  DAYS_7
+  DAYS_14
+  DAYS_30
+
+  @@map("report_frequency")
+}
+
 model Goal {
   id          String    @id @default(uuid())
   matchmaking Matchmaking   
@@ -44,6 +54,7 @@ model Goal {
   createdAt   DateTime  @default(now()) @map("created_at")
   endDate     DateTime? @map("end_date")
   status      GoalStatus   @default(in_progress)
+  reportFrequency ReportFrequency @default(DAYS_2) @map("report_frequency")
 
   userId  String @map("user_id")
   user    User   @relation(fields: [userId], references: [id])
