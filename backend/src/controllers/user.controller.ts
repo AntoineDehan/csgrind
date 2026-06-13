@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import * as userService from "../services/user.service";
+import { BadRequestError, NotFoundError } from "../errors/AppError";
 
 export async function getUsers(req: Request, res: Response) {
   const users = await userService.findAllUsers();
@@ -10,14 +11,12 @@ export async function getUser(req: Request, res: Response) {
   const id = req.params.id;
 
   if (typeof id !== "string") {
-    res.status(400).json({ message: "Invalid id" });
-    return;
+    throw new BadRequestError("Invalid id");
   }
 
   const user = await userService.findUserById(id);
   if (!user) {
-    res.status(404).json({ message: "User not found" });
-    return;
+    throw new NotFoundError("User not found");
   }
 
   res.json(user);
@@ -26,8 +25,7 @@ export async function getUser(req: Request, res: Response) {
 export async function patchUser(req: Request, res: Response) {
   const id = req.params.id;
   if (typeof id !== "string") {
-    res.status(400).json({ message: "Invalid id" });
-    return;
+    throw new BadRequestError("Invalid id");
   }
 
   const user = await userService.updateUser(id, req.body);
@@ -37,8 +35,7 @@ export async function patchUser(req: Request, res: Response) {
 export async function removeUser(req: Request, res: Response) {
   const id = req.params.id;
   if (typeof id !== "string") {
-    res.status(400).json({ message: "Invalid id" });
-    return;
+    throw new BadRequestError("Invalid id");
   }
 
   await userService.deleteUser(id);

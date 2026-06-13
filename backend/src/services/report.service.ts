@@ -8,6 +8,7 @@ import { compareReports } from "../comparators/report_comparator";
 import { selectTips } from "../selectors/tip_selector";
 import { selectTasks } from "../selectors/task_selector";
 import type { Report } from "../../generated/prisma/client";
+import { BadRequestError } from "../errors/AppError";
 
 export function findAllReports() {
   return prisma.report.findMany();
@@ -26,11 +27,12 @@ export function createReport(data: CreateReportInput) {
 export async function generateReport(userId: string, goalId: string) {
   const user = await findUserById(userId);
   const steamId = user?.steam64Id;
-  if (!steamId) throw new Error("User has not linked its Steam account");
+  if (!steamId)
+    throw new BadRequestError("User has not linked its Steam account");
 
   const leetifyProfile = await fetchLeetifyProfile(steamId);
   if (leetifyProfile.privacy_mode === "private")
-    throw new Error("Leetify profile private");
+    throw new BadRequestError("Leetify profile is private");
   const mappedStats = mapProfileToReport(leetifyProfile, goalId);
 
   const report = await createReport(mappedStats);

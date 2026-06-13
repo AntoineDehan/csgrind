@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import * as badgeService from "../services/badge.service";
 import { createBadgeSchema } from "../schemas/badge.schema";
+import { BadRequestError, NotFoundError } from "../errors/AppError";
 
 export async function getBadges(req: Request, res: Response) {
   const badges = await badgeService.findAllBadges();
@@ -10,14 +11,12 @@ export async function getBadges(req: Request, res: Response) {
 export async function getBadge(req: Request, res: Response) {
   const id = req.params.id;
   if (typeof id !== "string") {
-    res.status(400).json({ message: "Invalid id" });
-    return;
+    throw new BadRequestError("Invalid id");
   }
 
   const badge = await badgeService.findBadgeById(id);
   if (!badge) {
-    res.status(404).json({ message: "Badge not found" });
-    return;
+    throw new NotFoundError("Badge not found");
   }
 
   res.json(badge);
@@ -37,8 +36,7 @@ export async function postBadge(req: Request, res: Response) {
 export async function patchBadge(req: Request, res: Response) {
   const id = req.params.id;
   if (typeof id !== "string") {
-    res.status(400).json({ message: "Invalid id" });
-    return;
+    throw new BadRequestError("Invalid id");
   }
 
   const badge = await badgeService.updateBadge(id, req.body);
@@ -48,8 +46,7 @@ export async function patchBadge(req: Request, res: Response) {
 export async function removeBadge(req: Request, res: Response) {
   const id = req.params.id;
   if (typeof id !== "string") {
-    res.status(400).json({ message: "Invalid id" });
-    return;
+    throw new BadRequestError("Invalid id");
   }
 
   await badgeService.deleteBadge(id);
