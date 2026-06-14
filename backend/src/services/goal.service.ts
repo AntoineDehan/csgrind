@@ -11,16 +11,18 @@ type DueGoalRow = {
   lastReportAt: Date | null;
 };
 
-export function findAllGoals() {
-  return prisma.goal.findMany();
+export function findGoalsByUser(userId: string) {
+  return prisma.goal.findMany({ where: { userId } });
 }
 
-export function findGoalById(id: string) {
-  return prisma.goal.findUnique({ where: { id } });
+export function findGoalByIdForUser(id: string, userId: string) {
+  return prisma.goal.findFirst({ where: { id, userId } });
 }
 
-export function createGoal(data: CreateGoalInput) {
-  return prisma.goal.create({ data: data as Prisma.GoalUncheckedCreateInput });
+export function createGoal(data: CreateGoalInput, userId: string) {
+  return prisma.goal.create({
+    data: { ...data, userId } as Prisma.GoalUncheckedCreateInput,
+  });
 }
 
 export function updateGoal(id: string, data: UpdateGoalInput) {

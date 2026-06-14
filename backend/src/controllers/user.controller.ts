@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import * as userService from "../services/user.service";
 import { BadRequestError, NotFoundError } from "../errors/AppError";
 import { updateUserSchema } from "../schemas/user.schema";
+import { getUserId } from "../lib/getUserId";
 
 export async function getUsers(req: Request, res: Response) {
   const users = await userService.findAllUsers();
@@ -9,10 +10,13 @@ export async function getUsers(req: Request, res: Response) {
 }
 
 export async function getUser(req: Request, res: Response) {
+  const userId = getUserId(req);
   const id = req.params.id;
-
   if (typeof id !== "string") {
     throw new BadRequestError("Invalid id");
+  }
+  if (id !== userId) {
+    throw new NotFoundError("User not found");
   }
 
   const user = await userService.findUserById(id);
@@ -24,9 +28,13 @@ export async function getUser(req: Request, res: Response) {
 }
 
 export async function patchUser(req: Request, res: Response) {
+  const userId = getUserId(req);
   const id = req.params.id;
   if (typeof id !== "string") {
     throw new BadRequestError("Invalid id");
+  }
+  if (id !== userId) {
+    throw new NotFoundError("User not found");
   }
 
   const data = updateUserSchema.parse(req.body);
@@ -35,9 +43,13 @@ export async function patchUser(req: Request, res: Response) {
 }
 
 export async function removeUser(req: Request, res: Response) {
+  const userId = getUserId(req);
   const id = req.params.id;
   if (typeof id !== "string") {
     throw new BadRequestError("Invalid id");
+  }
+  if (id !== userId) {
+    throw new NotFoundError("User not found");
   }
 
   await userService.deleteUser(id);

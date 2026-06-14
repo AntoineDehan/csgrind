@@ -1,9 +1,6 @@
 import { prisma } from "../../prisma/lib/prisma";
 import type { Prisma } from "../../generated/prisma/client";
-import type {
-  CreateReportInput,
-  UpdateReportInput,
-} from "../schemas/report.schema";
+import type { CreateReportInput } from "../schemas/report.schema";
 import { fetchLeetifyProfile } from "../lib/leetify";
 import { mapProfileToReport } from "../mappers/report_mapper";
 import { findUserById } from "./user.service";
@@ -13,12 +10,12 @@ import { selectTasks } from "../selectors/task_selector";
 import type { Report } from "../../generated/prisma/client";
 import { BadRequestError } from "../errors/AppError";
 
-export function findAllReports() {
-  return prisma.report.findMany();
+export function findReportsByUser(userId: string) {
+  return prisma.report.findMany({ where: { goal: { userId } } });
 }
 
-export function findReportById(id: string) {
-  return prisma.report.findUnique({ where: { id } });
+export function findReportByIdForUser(id: string, userId: string) {
+  return prisma.report.findFirst({ where: { id, goal: { userId } } });
 }
 
 export function createReport(data: CreateReportInput) {
@@ -67,16 +64,6 @@ async function attachTasks(report: Report) {
   });
 }
 
-export function updateReport(id: string, data: UpdateReportInput) {
-  return prisma.report.update({
-    where: { id },
-    data: data as Prisma.ReportUncheckedUpdateInput,
-  });
-}
-
-export function deleteReport(id: string) {
-  return prisma.report.delete({ where: { id } });
-}
 
 export async function getGoalProgress(goalId: string) {
   const reports = await prisma.report.findMany({
