@@ -15,6 +15,7 @@ model User {
   name      String?   @db.VarChar(50)
   steam64Id String?  @unique @map("steam64_id") @db.VarChar(17)
   image     String?  @db.VarChar(500)
+  role Roles @default(USER)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -27,6 +28,10 @@ model User {
 enum Matchmaking {
   FACEIT
   PREMIER
+}
+enum Roles {
+  USER
+  ADMIN
 }
 
 enum GoalStatus {

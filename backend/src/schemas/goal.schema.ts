@@ -14,7 +14,6 @@ export const createGoalSchema = z.object({
   endDate: z.coerce.date().optional(),
   status: z.enum(["in_progress", "completed", "abandoned"]).optional(),
   reportFrequency: z.enum(reportFrequencyValues).optional(),
-  userId: z.uuid(),
 });
 
 export type CreateGoalInput = z.infer<typeof createGoalSchema>;
