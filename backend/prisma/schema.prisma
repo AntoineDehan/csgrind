@@ -59,7 +59,7 @@ model Goal {
   createdAt   DateTime  @default(now()) @map("created_at")
   endDate     DateTime? @map("end_date")
   status      GoalStatus   @default(in_progress)
-  reportFrequency ReportFrequency @default(DAYS_2) @map("report_frequency")
+  reportFrequency ReportFrequency @default(DAYS_5) @map("report_frequency")
 
   userId  String @map("user_id")
   user    User   @relation(fields: [userId], references: [id])
