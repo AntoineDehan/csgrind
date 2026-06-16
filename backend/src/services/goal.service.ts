@@ -6,6 +6,7 @@ import type { CreateGoalInput, UpdateGoalInput } from "../schemas/goal.schema";
 type DueGoalRow = {
   id: string;
   userId: string;
+  email: string;
   createdAt: Date;
   reportFrequency: ReportFrequency;
   lastReportAt: Date | null;
@@ -41,6 +42,7 @@ export function checkToUpdateGoal() {
     SELECT
       g.id               AS "id",
       g.user_id          AS "userId",
+      u.email            AS "email",
       g.created_at       AS "createdAt",
       g.report_frequency AS "reportFrequency",
       r.created_at       AS "lastReportAt"

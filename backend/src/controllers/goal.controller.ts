@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import * as goalService from "../services/goal.service";
 import * as reportService from "../services/report.service";
+import * as userService from "../services/user.service";
 import { createGoalSchema, updateGoalSchema } from "../schemas/goal.schema";
 import { BadRequestError, NotFoundError } from "../errors/AppError";
 import { getUserId } from "../lib/getUserId";
@@ -31,7 +32,19 @@ export async function postGoal(req: Request, res: Response) {
   const userId = getUserId(req);
   const data = createGoalSchema.parse(req.body);
 
+  const user = await userService.findUserById(userId);
+  if (!user?.steam64Id) {
+    throw new BadRequestError("Link your Steam account before creating a goal");
+  }
+
   const goal = await goalService.createGoal(data, userId);
+
+  try {
+    await reportService.generateReport(userId, goal.id);
+  } catch (error) {
+    console.error(`Baseline report failed for goal ${goal.id}:`, error);
+  }
+
   res.status(201).json(goal);
 }
 

@@ -1,6 +1,7 @@
 import { checkToUpdateGoal } from "../services/goal.service";
 import { addDays, FREQUENCY_DAYS } from "../lib/reportFrequency";
 import { generateReport } from "../services/report.service";
+import { sendReportNotification } from "../lib/mailer";
 
 type DueGoal = Awaited<ReturnType<typeof checkToUpdateGoal>>[number];
 
@@ -21,6 +22,12 @@ export async function runReportScheduler() {
     try {
       await generateReport(goal.userId, goal.id);
       succeeded++;
+
+      try {
+        await sendReportNotification(goal.email);
+      } catch (error) {
+        console.error(`Notification failed for goal ${goal.id}:`, error);
+      }
     } catch (error) {
       failed++;
       console.error(`Report generation failed for goal ${goal.id}:`, error);
