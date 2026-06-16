@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import cron from "node-cron";
 import { runReportScheduler } from "./src/jobs/reportScheduler";
 import { errorHandler } from "./src/middlewares/error.middleware";
@@ -13,6 +14,7 @@ import reportRouter from "./src/routes/report";
 const app = express();
 const port = 3000;
 
+app.use(cors({ origin: process.env.SITE_URL ?? "http://localhost:5173" }));
 app.use(express.json());
 
 app.get("/", (req, res) => {
