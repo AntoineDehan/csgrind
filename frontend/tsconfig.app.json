@@ -24,7 +24,10 @@
     /* Shadcn */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@backend/*": ["../backend/src/*"],
+      "zod": ["./node_modules/zod"],
+      "zod/*": ["./node_modules/zod/*"]
     }
   },
   "include": ["src"]
