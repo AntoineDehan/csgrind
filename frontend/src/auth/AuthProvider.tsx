@@ -3,6 +3,7 @@ import { AuthContext } from "./AuthContext";
 import { getToken, setToken, clearToken } from "../lib/token";
 import {
   login as loginRequest,
+  register as registerRequest,
   getMe,
   type Credentials,
   type User,
@@ -23,6 +24,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .finally(() => setIsLoading(false));
   }, []);
 
+  async function register(credentials: Credentials) {
+    await registerRequest(credentials);
+    await login(credentials);
+  }
+
   async function login(credentials: Credentials) {
     const { token } = await loginRequest(credentials);
     setToken(token);
@@ -35,7 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
