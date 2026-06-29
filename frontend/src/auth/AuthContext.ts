@@ -5,6 +5,7 @@ export type AuthContextValue = {
   user: User | null;
   isLoading: boolean;
   login: (credentials: Credentials) => Promise<void>;
+  register: (credentials: Credentials) => Promise<void>;
   logout: () => void;
 };
 
