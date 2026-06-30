@@ -1,23 +1,19 @@
 import { useState } from "react";
 import { useForm } from "@tanstack/react-form";
-import { useAuth } from "../auth/AuthContext";
+import { useLogin, useRegister } from "../auth/useAuth";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
 import {
   loginUserSchema,
   registerUserSchema,
 } from "@backend/schemas/auth.schema";
 
 export default function Login() {
-  const { login, register } = useAuth();
   const [mode, setMode] = useState<"login" | "register">("login");
   const navigate = useNavigate();
 
-  const mutation = useMutation({
-    mutationFn: (value: { email: string; password: string }) =>
-      mode === "login" ? login(value) : register(value),
-    onSuccess: () => navigate("/dashboard"),
-  });
+  const loginMutation = useLogin();
+  const registerMutation = useRegister();
+  const mutation = mode === "login" ? loginMutation : registerMutation;
 
   const form = useForm({
     defaultValues: { email: "", password: "" },
@@ -26,6 +22,7 @@ export default function Login() {
     },
     onSubmit: async ({ value }) => {
       await mutation.mutateAsync(value);
+      navigate("/dashboard");
     },
   });
 

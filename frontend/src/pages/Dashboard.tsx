@@ -1,15 +1,16 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../auth/AuthContext";
+import { useUser } from "../auth/useAuth";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { startSteamLink } from "../services/steam";
 import { getReports } from "../services/reports";
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { data: user } = useUser();
   const { data: reports } = useQuery({
     queryKey: ["reports"],
     queryFn: getReports,
   });
+
   const steamMutation = useMutation({
     mutationFn: startSteamLink,
     onSuccess: ({ url }) => {
@@ -21,7 +22,7 @@ export default function Dashboard() {
     <div>
       <h1>Dashboard</h1>
       <p>Email : {user?.email}</p>
-      <p>Steam : {user?.steam64Id ?? "non lié"}</p>
+      <p>Steam : {user?.steam64Id ?? "not linked"}</p>
       <button
         onClick={() => steamMutation.mutate()}
         disabled={steamMutation.isPending}
@@ -35,7 +36,7 @@ export default function Dashboard() {
         </Link>
       )}
 
-      <h2>Mes reports</h2>
+      <h2>My reports</h2>
       <ul>
         {reports?.map((r) => (
           <li key={r.id}>
