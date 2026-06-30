@@ -5,7 +5,13 @@ import { z } from "zod";
 import { createGoalSchema } from "@backend/schemas/goal.schema";
 import { createGoal } from "../services/goals";
 
-const FREQUENCIES = ["DAYS_2", "DAYS_5", "DAYS_7", "DAYS_14", "DAYS_30"] as const;
+const FREQUENCIES = [
+  "DAYS_2",
+  "DAYS_5",
+  "DAYS_7",
+  "DAYS_14",
+  "DAYS_30",
+] as const;
 
 const goalFormSchema = createGoalSchema
   .pick({
@@ -30,8 +36,8 @@ export default function SetGoal() {
 
   const form = useForm({
     defaultValues: {
-      matchmaking: "FACEIT",
-      eloGoal: 1000,
+      matchmaking: "PREMIER",
+      eloGoal: 15000,
       reportFrequency: "DAYS_7",
       endDate: "",
     } as GoalFormValues,
@@ -47,7 +53,7 @@ export default function SetGoal() {
 
   return (
     <div>
-      <h1>Créer un goal</h1>
+      <h1>Create a goal</h1>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -74,7 +80,7 @@ export default function SetGoal() {
         <form.Field name="eloGoal">
           {(field) => (
             <div>
-              <label>Elo cible </label>
+              <label>Elo target </label>
               <input
                 type="number"
                 value={field.state.value}
@@ -87,7 +93,7 @@ export default function SetGoal() {
         <form.Field name="reportFrequency">
           {(field) => (
             <div>
-              <label>Fréquence des bilans </label>
+              <label>Report frequency </label>
               <select
                 value={field.state.value}
                 onChange={(e) =>
@@ -109,7 +115,7 @@ export default function SetGoal() {
         <form.Field name="endDate">
           {(field) => (
             <div>
-              <label>Date de fin (optionnel) </label>
+              <label>End date (optional) </label>
               <input
                 type="date"
                 value={field.state.value ?? ""}
@@ -120,7 +126,7 @@ export default function SetGoal() {
         </form.Field>
 
         <button type="submit" disabled={mutation.isPending}>
-          Créer le goal
+          Create goal
         </button>
         {mutation.error && <p>{mutation.error.message}</p>}
       </form>

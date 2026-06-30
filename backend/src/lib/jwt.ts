@@ -24,6 +24,21 @@ export function signToken(userId: string): string {
   return signedToken;
 }
 
+export function signTokenSteam(userId: string): string {
+  const secretToken = getSecret();
+
+  if (!secretToken) throw "Secret token missing";
+  const signedToken = jwt.sign(
+    {
+      userId,
+    },
+    secretToken,
+    { expiresIn: "10min" },
+  );
+
+  return signedToken;
+}
+
 export function verifyToken(token: string): TokenPayload {
   const secretToken = getSecret();
 

@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import * as userService from "../services/user.service";
 import { getSteamRedirectUrl, verifySteamReturn } from "../lib/steam";
-import { signToken, verifyToken } from "../lib/jwt";
+import { signTokenSteam, verifyToken } from "../lib/jwt";
 import { AppError, UnauthorizedError } from "../errors/AppError";
 
 export function startSteamLink(req: Request, res: Response) {
@@ -16,7 +16,7 @@ export function startSteamLink(req: Request, res: Response) {
     throw new AppError("Steam config missing", 500);
   }
 
-  const state = signToken(userId);
+  const state = signTokenSteam(userId);
   const returnTo = `${returnUrl}?state=${state}`;
   res.json({ url: getSteamRedirectUrl(returnTo, realm) });
 }
