@@ -1,10 +1,15 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { startSteamLink } from "../services/steam";
+import { getReports } from "../services/reports";
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { data: reports } = useQuery({
+    queryKey: ["reports"],
+    queryFn: getReports,
+  });
   const steamMutation = useMutation({
     mutationFn: startSteamLink,
     onSuccess: ({ url }) => {
@@ -29,6 +34,17 @@ export default function Dashboard() {
           <button>Set a goal</button>
         </Link>
       )}
+
+      <h2>Mes reports</h2>
+      <ul>
+        {reports?.map((r) => (
+          <li key={r.id}>
+            <Link to={`/reports/${r.id}`}>
+              {r.id} — {new Date(r.createdAt).toLocaleString()}
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
