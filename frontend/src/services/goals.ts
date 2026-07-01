@@ -1,9 +1,16 @@
-import type { CreateGoalInput } from "@backend/schemas/goal.schema";
+import {
+  goalSchema,
+  type CreateGoalInput,
+  type Goal,
+} from "@backend/schemas/goal.schema";
 import { apiFetch } from "../lib/api";
 
-export function createGoal(data: CreateGoalInput) {
-  return apiFetch("/goals", {
+export type { Goal };
+
+export async function createGoal(data: CreateGoalInput): Promise<Goal> {
+  const created = await apiFetch<unknown>("/goals", {
     method: "POST",
     body: JSON.stringify(data),
   });
+  return goalSchema.parse(created);
 }
