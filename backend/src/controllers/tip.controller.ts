@@ -1,10 +1,10 @@
 import type { Request, Response } from "express";
-import * as tipService from "../services/tip.service";
+import * as tipRepo from "../repositories/tip.repository";
 import { createTipSchema, updateTipSchema } from "../schemas/tip.schema";
 import { BadRequestError, NotFoundError } from "../errors/AppError";
 
 export async function getTips(req: Request, res: Response) {
-  const tips = await tipService.findAllTips();
+  const tips = await tipRepo.findAllTips();
   res.json(tips);
 }
 
@@ -14,7 +14,7 @@ export async function getTip(req: Request, res: Response) {
     throw new BadRequestError("Invalid id");
   }
 
-  const tip = await tipService.findTipById(id);
+  const tip = await tipRepo.findTipById(id);
   if (!tip) {
     throw new NotFoundError("Tip not found");
   }
@@ -24,7 +24,7 @@ export async function getTip(req: Request, res: Response) {
 
 export async function postTip(req: Request, res: Response) {
   const data = createTipSchema.parse(req.body);
-  const tip = await tipService.createTip(data);
+  const tip = await tipRepo.createTip(data);
   res.status(201).json(tip);
 }
 
@@ -35,7 +35,7 @@ export async function patchTip(req: Request, res: Response) {
   }
 
   const data = updateTipSchema.parse(req.body);
-  const tip = await tipService.updateTip(id, data);
+  const tip = await tipRepo.updateTip(id, data);
   res.json(tip);
 }
 
@@ -45,6 +45,6 @@ export async function removeTip(req: Request, res: Response) {
     throw new BadRequestError("Invalid id");
   }
 
-  await tipService.deleteTip(id);
+  await tipRepo.deleteTip(id);
   res.status(204).send();
 }

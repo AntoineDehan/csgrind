@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { findUserById } from "../services/user.service";
+import { findUserById } from "../repositories/user.repository";
 import { ForbiddenError, UnauthorizedError } from "../errors/AppError";
 
 export async function requireAdmin(
