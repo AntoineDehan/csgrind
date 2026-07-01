@@ -1,28 +1,12 @@
-import { prisma } from "../../prisma/lib/prisma";
-import type { Prisma } from "../../generated/prisma/client";
-import type { CreateReportInput } from "../schemas/report.schema";
+import type { Report } from "../../generated/prisma/client";
 import { fetchLeetifyProfile } from "../lib/leetify";
 import { mapProfileToReport } from "../mappers/report_mapper";
-import { findUserById } from "./user.service";
+import { findUserById } from "../repositories/user.repository";
+import * as reportRepo from "../repositories/report.repository";
 import { compareReports } from "../comparators/report_comparator";
 import { selectTips } from "../selectors/tip_selector";
 import { selectTasks } from "../selectors/task_selector";
-import type { Report } from "../../generated/prisma/client";
 import { BadRequestError } from "../errors/AppError";
-
-export function findReportsByUser(userId: string) {
-  return prisma.report.findMany({ where: { goal: { userId } } });
-}
-
-export function findReportByIdForUser(id: string, userId: string) {
-  return prisma.report.findFirst({ where: { id, goal: { userId } } });
-}
-
-export function createReport(data: CreateReportInput) {
-  return prisma.report.create({
-    data: data as Prisma.ReportUncheckedCreateInput,
-  });
-}
 
 export async function generateReport(userId: string, goalId: string) {
   const user = await findUserById(userId);
@@ -35,7 +19,7 @@ export async function generateReport(userId: string, goalId: string) {
     throw new BadRequestError("Leetify profile is private");
   const mappedStats = mapProfileToReport(leetifyProfile, goalId);
 
-  const report = await createReport(mappedStats);
+  const report = await reportRepo.createReport(mappedStats);
   await attachTips(report);
   await attachTasks(report);
   return report;
@@ -45,32 +29,18 @@ async function attachTips(report: Report) {
   const tipIds = selectTips(report);
   if (tipIds.length === 0) return;
 
-  await prisma.reportTip.createMany({
-    data: tipIds.map((tipId) => ({ reportId: report.id, tipId })),
-  });
+  await reportRepo.createReportTips(report.id, tipIds);
 }
 
 async function attachTasks(report: Report) {
   const tasks = selectTasks(report);
   if (tasks.length === 0) return;
 
-  await prisma.reportTask.createMany({
-    data: tasks.map((task) => ({
-      reportId: report.id,
-      taskId: task.taskId,
-      trackCurrent: task.trackCurrent,
-      trackTarget: task.trackTarget,
-    })),
-  });
+  await reportRepo.createReportTasks(report.id, tasks);
 }
 
-
 export async function getGoalProgress(goalId: string) {
-  const reports = await prisma.report.findMany({
-    where: { goalId },
-    orderBy: { createdAt: "desc" },
-    take: 2,
-  });
+  const reports = await reportRepo.findRecentReports(goalId, 2);
 
   const [current, previous] = reports;
   if (!current || !previous) return null;

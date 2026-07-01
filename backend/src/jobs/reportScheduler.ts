@@ -1,6 +1,6 @@
-import { checkToUpdateGoal } from "../services/goal.service";
+import { checkToUpdateGoal } from "../repositories/goal.repository";
 import { addDays, FREQUENCY_DAYS } from "../lib/reportFrequency";
-import { generateReport } from "../services/report.service";
+import { generateReport } from "../handlers/report.handler";
 import { sendReportNotification } from "../lib/mailer";
 
 type DueGoal = Awaited<ReturnType<typeof checkToUpdateGoal>>[number];

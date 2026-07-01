@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import * as userService from "../services/user.service";
+import * as userRepo from "../repositories/user.repository";
 import { getSteamRedirectUrl, verifySteamReturn } from "../lib/steam";
 import { signTokenSteam, verifyToken } from "../lib/jwt";
 import { AppError, UnauthorizedError } from "../errors/AppError";
@@ -33,7 +33,7 @@ export async function steamReturn(req: Request, res: Response) {
       req.query as Record<string, string>,
     );
 
-    await userService.linkSteamAccount(userId, steam64Id);
+    await userRepo.linkSteamAccount(userId, steam64Id);
     res.redirect(`${front}/dashboard?steam=linked`);
   } catch {
     res.redirect(`${front}/dashboard?steam=error`);

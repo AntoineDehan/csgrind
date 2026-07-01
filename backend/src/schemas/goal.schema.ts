@@ -27,3 +27,16 @@ export const updateGoalSchema = z.object({
 });
 
 export type UpdateGoalInput = z.infer<typeof updateGoalSchema>;
+
+export const goalSchema = z.object({
+  id: z.uuid(),
+  matchmaking: z.enum(["FACEIT", "PREMIER"]),
+  eloGoal: z.number().int(),
+  endDate: z.iso.datetime().nullable(),
+  status: z.enum(["in_progress", "completed", "abandoned"]),
+  reportFrequency: z.enum(reportFrequencyValues),
+  userId: z.uuid(),
+  createdAt: z.iso.datetime(),
+});
+
+export type Goal = z.infer<typeof goalSchema>;

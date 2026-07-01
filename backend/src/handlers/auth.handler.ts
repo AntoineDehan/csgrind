@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { createUser, findUserByEmail } from "./user.service";
+import { createUser, findUserByEmail } from "../repositories/user.repository";
 import type { RegisterUserInput, LoginUserInput } from "../schemas/auth.schema";
 import { signToken } from "../lib/jwt";
 import { UnauthorizedError } from "../errors/AppError";

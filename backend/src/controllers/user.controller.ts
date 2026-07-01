@@ -1,11 +1,11 @@
 import type { Request, Response } from "express";
-import * as userService from "../services/user.service";
+import * as userRepo from "../repositories/user.repository";
 import { BadRequestError, NotFoundError } from "../errors/AppError";
 import { updateUserSchema } from "../schemas/user.schema";
 import { getUserId } from "../lib/getUserId";
 
 export async function getUsers(req: Request, res: Response) {
-  const users = await userService.findAllUsers();
+  const users = await userRepo.findAllUsers();
   res.json(users);
 }
 
@@ -19,7 +19,7 @@ export async function getUser(req: Request, res: Response) {
     throw new NotFoundError("User not found");
   }
 
-  const user = await userService.findUserById(id);
+  const user = await userRepo.findUserById(id);
   if (!user) {
     throw new NotFoundError("User not found");
   }
@@ -38,7 +38,7 @@ export async function patchUser(req: Request, res: Response) {
   }
 
   const data = updateUserSchema.parse(req.body);
-  const user = await userService.updateUser(id, data);
+  const user = await userRepo.updateUser(id, data);
   res.json(user);
 }
 
@@ -52,6 +52,6 @@ export async function removeUser(req: Request, res: Response) {
     throw new NotFoundError("User not found");
   }
 
-  await userService.deleteUser(id);
+  await userRepo.deleteUser(id);
   res.status(204).send();
 }
