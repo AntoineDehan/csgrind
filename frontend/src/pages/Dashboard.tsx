@@ -3,6 +3,7 @@ import { useUser } from "../auth/useAuth";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { startSteamLink } from "../services/steam";
 import { getReports } from "../services/reports";
+import Logo from "../components/ui/Logo/Logo";
 
 export default function Dashboard() {
   const { data: user } = useUser();
@@ -20,6 +21,7 @@ export default function Dashboard() {
 
   return (
     <div>
+      <Logo variant="black" size="normal" />
       <h1>Dashboard</h1>
       <p>Email : {user?.email}</p>
       <p>Steam : {user?.steam64Id ?? "not linked"}</p>
