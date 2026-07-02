@@ -1,0 +1,29 @@
+.loader {
+  display: inline-block;
+  border: 2px solid var(--color-muted);
+  border-top-color: var(--color-brand);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.loader--small {
+  width: 1rem;
+  height: 1rem;
+}
+
+.loader--normal {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.loader--large {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-width: 3px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
