@@ -1,20 +1,20 @@
 import { useForm } from "@tanstack/react-form";
 import { useNavigate } from "react-router-dom";
-import { loginUserSchema } from "@backend/schemas/auth.schema";
-import { useLogin } from "../auth/useAuth";
+import { registerUserSchema } from "@backend/schemas/auth.schema";
+import { useRegister } from "../auth/useAuth";
 import Title from "../components/ui/Title/Title";
 import Input from "../components/ui/Input/Input";
 import Button from "../components/ui/Button/Button";
 import Link from "../components/ui/Link/Link";
 import Alert from "../components/ui/Alert/Alert";
 
-export default function Login() {
+export default function Register() {
   const navigate = useNavigate();
-  const mutation = useLogin();
+  const mutation = useRegister();
 
   const form = useForm({
     defaultValues: { email: "", password: "" },
-    validators: { onChange: loginUserSchema },
+    validators: { onChange: registerUserSchema },
     onSubmit: async ({ value }) => {
       await mutation.mutateAsync(value);
       navigate("/dashboard");
@@ -23,7 +23,7 @@ export default function Login() {
 
   return (
     <div>
-      <Title level="h2">Se connecter</Title>
+      <Title level="h2">S'inscrire</Title>
 
       <form
         onSubmit={(e) => {
@@ -58,13 +58,13 @@ export default function Login() {
         </form.Field>
 
         <Button type="submit" variant="cta" disabled={mutation.isPending}>
-          Se connecter
+          S'inscrire
         </Button>
 
         {mutation.error && <Alert variant="error">{mutation.error.message}</Alert>}
       </form>
 
-      <Link to="/register">Pas encore de compte ? S'inscrire</Link>
+      <Link to="/login">Déjà un compte ? Se connecter</Link>
     </div>
   );
 }
