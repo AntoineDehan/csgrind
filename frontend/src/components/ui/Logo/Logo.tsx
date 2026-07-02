@@ -1,7 +1,7 @@
 import styles from "./logo.module.css";
+import type { Size } from "../types";
 
 type Variant = "black" | "white";
-type Size = "small" | "normal" | "large";
 
 type LogoProps = {
   variant?: Variant;
