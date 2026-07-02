@@ -1,0 +1,41 @@
+.text {
+  font-family: var(--font-main);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.size--small {
+  font-size: 0.875rem;
+}
+
+.size--normal {
+  font-size: 1rem;
+}
+
+.size--large {
+  font-size: 1.25rem;
+}
+
+.weight--normal {
+  font-weight: 400;
+}
+
+.weight--medium {
+  font-weight: 500;
+}
+
+.weight--bold {
+  font-weight: 700;
+}
+
+.color--primary {
+  color: var(--color-text-primary);
+}
+
+.color--secondary {
+  color: var(--color-text-secondary);
+}
+
+.color--brand {
+  color: var(--color-brand);
+}
