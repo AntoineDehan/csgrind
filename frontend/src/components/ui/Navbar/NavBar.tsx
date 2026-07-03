@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import type { ReactNode } from "react";
 import Logo from "../Logo/Logo";
 import styles from "./navbar.module.css";
-import btn from "../Button/button.module.css";
 
 type NavItem = {
   to: string;
@@ -20,7 +19,7 @@ export default function Navbar({ logo = true, aside = [] }: NavbarProps) {
     <nav className={styles.navbar}>
       {logo && (
         <Link to="/" className={styles.brand}>
-          <Logo variant="white" size="small" />
+          <Logo variant="white" size="normal" />
         </Link>
       )}
 
@@ -29,9 +28,7 @@ export default function Navbar({ logo = true, aside = [] }: NavbarProps) {
           <Link
             key={item.to}
             to={item.to}
-            className={
-              item.cta ? `${btn.button} ${btn["button--cta"]}` : styles.link
-            }
+            className={item.cta ? styles.linkCta : styles.link}
           >
             {item.label}
           </Link>

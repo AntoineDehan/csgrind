@@ -1,3 +1,5 @@
+import Title from "../components/ui/Title/Title";
+
 export default function Home() {
-  return <h1>Home</h1>
+  return <Title>Home</Title>;
 }

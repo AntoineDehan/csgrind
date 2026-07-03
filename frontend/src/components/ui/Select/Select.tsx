@@ -10,7 +10,9 @@ type SelectProps = {
   value?: string;
   onChange?: (value: string) => void;
   name?: string;
+  id?: string;
   disabled?: boolean;
+  "aria-label"?: string;
 };
 
 export default function Select({
@@ -18,14 +20,18 @@ export default function Select({
   value,
   onChange,
   name,
+  id,
   disabled,
+  "aria-label": ariaLabel,
 }: SelectProps) {
   return (
     <select
       className={styles.select}
       value={value}
       name={name}
+      id={id}
       disabled={disabled}
+      aria-label={ariaLabel}
       onChange={(event) => onChange?.(event.target.value)}
     >
       {options.map((option) => (

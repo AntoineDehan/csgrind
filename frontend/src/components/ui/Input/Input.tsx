@@ -12,6 +12,10 @@ type InputProps = Pick<
   | "name"
   | "required"
   | "id"
+  | "autoComplete"
+  | "aria-label"
+  | "aria-describedby"
+  | "aria-invalid"
 >;
 
 export default function Input(props: InputProps) {
