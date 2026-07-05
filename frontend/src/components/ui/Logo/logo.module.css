@@ -1,5 +1,7 @@
 .logo {
+  display: block;
   width: auto;
+  aspect-ratio: 365 / 87;
 }
 
 .logo--small {
