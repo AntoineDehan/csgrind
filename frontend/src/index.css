@@ -64,4 +64,8 @@
       font-weight: 600;
     }
   }
+
+  .colored-text {
+    color: var(--color-brand);
+  }
 }
