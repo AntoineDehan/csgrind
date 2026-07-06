@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "../components/ui/Button/Button";
 import Title from "../components/ui/Title/Title";
 import Text from "../components/ui/Text/Text";
+import Section from "../components/ui/Section/Section";
 import {
   Card,
   CardHeader,
@@ -43,7 +44,7 @@ export default function Home() {
   ];
   return (
     <div className="flex justify-center flex-col items-center pl-70 pr-70 max-lg:px-40">
-      <div className="top-content flex justify-between w-full mt-10">
+      <section className="top-content flex justify-between w-full mt-10">
         <div className="w-[40%]">
           <Title>
             See your progress,
@@ -59,19 +60,29 @@ export default function Home() {
               <Button variant="cta" onClick={() => navigate("/register")}>
                 Start now
               </Button>
-              <Button variant="secondary">Learn more</Button>
+              <Button
+                variant="secondary"
+                onClick={() =>
+                  document
+                    .getElementById("learn-more")
+                    ?.scrollIntoView({ behavior: "smooth" })
+                }
+              >
+                Learn more
+              </Button>
             </div>
           </div>
         </div>
         <div>Screen?</div>
-      </div>
-      <div className="main-content w-full h-104 mt-5">
-        <Title level="h2">YOUR OWN REPORTS</Title>
+      </section>
+      <Section title="YOUR OWN REPORTS" className="main-content w-full h-104 mt-8">
         <div>Bilan img</div>
-      </div>
-      <div className="middle-content w-full">
-        <Title level="h2">HOW TO START</Title>
-        <Text>3 easy steps before starting your journey to the top</Text>
+      </Section>
+      <Section
+        title="HOW TO START"
+        subtitle="3 easy steps before starting your journey to the top"
+        className="middle-content w-full"
+      >
         <div className="cards-container flex gap-3 mt-6 justify-between">
           <Card className="aspect-square size-[320px] border-background-secondary-border">
             <CardHeader>
@@ -126,13 +137,13 @@ export default function Home() {
             </CardContent>
           </Card>
         </div>
-      </div>
-      <div className="bottom-content mt-5 w-full">
-        <Title level="h2">MORE THAN SOME STATS</Title>
-        <Text>
-          The main goal of CSGRIND is to help you track your progress up until
-          the completion of your goal
-        </Text>
+      </Section>
+      <Section
+        id="learn-more"
+        title="MORE THAN SOME STATS"
+        subtitle="The main goal of CSGRIND is to help you track your progress up until the completion of your goal"
+        className="bottom-content mt-8 w-full"
+      >
         <Accordion
           multiple={false}
           className="mt-6 rounded-lg border px-4 bg-background-secondary border-background-secondary-border"
@@ -159,8 +170,8 @@ export default function Home() {
             </AccordionItem>
           ))}
         </Accordion>
-      </div>
-      <div className="bottom-cta mt-10 w-[50%] flex flex-col justify-center items-center mb-5">
+      </Section>
+      <div className="bottom-cta mt-15 w-[50%] flex flex-col justify-center items-center mb-10">
         <Title level="h3">READY TO GRIND ?</Title>
         <Text size="small">Time to finally obtain your dream elo</Text>
         <div className="mt-5">
