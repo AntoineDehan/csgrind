@@ -23,7 +23,7 @@ export default function Logo({
 
   return (
     <svg
-      viewBox="0 0 365 122"
+      viewBox="0 3 365 87"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}

@@ -1,7 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { useNavigate } from "react-router-dom";
-import { loginUserSchema } from "@backend/schemas/auth.schema";
-import { useLogin } from "../auth/useAuth";
+import { registerUserSchema } from "@backend/schemas/auth.schema";
+import { useRegister } from "../auth/useAuth";
 import Link from "../components/ui/Link/Link";
 import Input from "../components/ui/Input/Input";
 import Button from "../components/ui/Button/Button";
@@ -23,13 +23,13 @@ function fieldError(errors: unknown[]): string {
     .join(", ");
 }
 
-export default function Login() {
+export default function Register() {
   const navigate = useNavigate();
-  const mutation = useLogin();
+  const mutation = useRegister();
 
   const form = useForm({
     defaultValues: { email: "", password: "" },
-    validators: { onChange: loginUserSchema },
+    validators: { onChange: registerUserSchema },
     onSubmit: async ({ value }) => {
       await mutation.mutateAsync(value);
       navigate("/dashboard");
@@ -43,9 +43,9 @@ export default function Login() {
       </Link>
       <Card className="w-100 border-background-secondary-border">
         <CardHeader>
-          <CardTitle>Log in</CardTitle>
+          <CardTitle>Create account</CardTitle>
           <CardDescription>
-            Welcome back — let's get you grinding.
+            Set a goal, get reports, climb. Start your grind.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -92,8 +92,8 @@ export default function Login() {
                     id={field.name}
                     name={field.name}
                     type="password"
-                    autoComplete="current-password"
-                    placeholder="••••••••"
+                    autoComplete="new-password"
+                    placeholder="At least 8 characters"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                     onBlur={field.handleBlur}
@@ -113,13 +113,13 @@ export default function Login() {
             )}
 
             <Button type="submit" variant="cta" disabled={mutation.isPending}>
-              {mutation.isPending ? "Logging in…" : "Log in"}
+              {mutation.isPending ? "Creating account…" : "Register"}
             </Button>
           </form>
         </CardContent>
         <CardFooter>
           <Text size="small">
-            No account yet? <Link to="/register">Create one</Link>
+            Already have an account? <Link to="/login">Log in</Link>
           </Text>
         </CardFooter>
       </Card>

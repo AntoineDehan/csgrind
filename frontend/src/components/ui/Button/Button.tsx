@@ -1,7 +1,7 @@
 import type { ReactNode, MouseEventHandler } from "react";
 import styles from "./button.module.css";
 
-type Variant = "normal" | "cta";
+type Variant = "normal" | "secondary" | "cta";
 
 type ButtonProps = {
   children?: ReactNode;
@@ -10,6 +10,7 @@ type ButtonProps = {
   icon?: ReactNode;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
+  "aria-label"?: string;
 };
 
 const DEFAULT_VARIANT: Variant = "normal";
@@ -22,6 +23,7 @@ export default function Button({
   icon,
   type = DEFAULT_TYPE,
   disabled = false,
+  "aria-label": ariaLabel,
 }: ButtonProps) {
   const className = [styles.button, styles["button--" + variant]].join(" ");
 
@@ -31,8 +33,13 @@ export default function Button({
       className={className}
       onClick={onClick}
       disabled={disabled}
+      aria-label={ariaLabel}
     >
-      {icon && <span className={styles.icon}>{icon}</span>}
+      {icon && (
+        <span className={styles.icon} aria-hidden="true">
+          {icon}
+        </span>
+      )}
       {children}
     </button>
   );

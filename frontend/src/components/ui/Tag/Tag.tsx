@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import styles from "./tag.module.css";
 
-type Variant = "neutral" | "success" | "danger" | "warning";
+type Variant = "neutral" | "success" | "error" | "warning";
 
 type TagProps = {
   children: ReactNode;

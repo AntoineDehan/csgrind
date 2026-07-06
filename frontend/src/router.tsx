@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import ReportDetail from "./pages/Report";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import SetGoal from "./pages/SetGoal";
 import ProtectedRoute from "./auth/ProtectedRoute";
@@ -14,7 +15,6 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <Home /> },
-      { path: "login", element: <Login /> },
       {
         element: <ProtectedRoute />,
         children: [
@@ -26,4 +26,6 @@ export const router = createBrowserRouter([
       { path: "*", element: <NotFound /> },
     ],
   },
+  { path: "/login", element: <Login /> },
+  { path: "/register", element: <Register /> },
 ]);
