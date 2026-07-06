@@ -4,6 +4,10 @@
   line-height: 1.5;
 }
 
+.mono {
+  font-family: var(--font-mono);
+}
+
 .size--small {
   font-size: 0.875rem;
 }

@@ -15,8 +15,6 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <Home /> },
-      { path: "login", element: <Login /> },
-      { path: "register", element: <Register /> },
       {
         element: <ProtectedRoute />,
         children: [
@@ -28,4 +26,6 @@ export const router = createBrowserRouter([
       { path: "*", element: <NotFound /> },
     ],
   },
+  { path: "/login", element: <Login /> },
+  { path: "/register", element: <Register /> },
 ]);

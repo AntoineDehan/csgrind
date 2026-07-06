@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import Button from "../components/ui/Button/Button";
 import Title from "../components/ui/Title/Title";
 import Text from "../components/ui/Text/Text";
@@ -16,6 +17,8 @@ import {
 } from "@/components/ui/accordion";
 
 export default function Home() {
+  const navigate = useNavigate();
+
   const ACCORDION_FEATURES = [
     {
       title: "Objective tracking",
@@ -39,7 +42,7 @@ export default function Home() {
     },
   ];
   return (
-    <div className="flex align-item justify-center flex-col items-center pl-50 pr-50">
+    <div className="flex justify-center flex-col items-center pl-70 pr-70 max-lg:px-40">
       <div className="top-content flex justify-between w-full mt-10">
         <div className="w-[40%]">
           <Title>
@@ -53,7 +56,9 @@ export default function Home() {
               your target rank.
             </Text>
             <div className="mt-4 flex gap-3.5">
-              <Button variant="cta">Start now</Button>
+              <Button variant="cta" onClick={() => navigate("/register")}>
+                Start now
+              </Button>
               <Button variant="secondary">Learn more</Button>
             </div>
           </div>
@@ -64,7 +69,7 @@ export default function Home() {
         <Title level="h2">YOUR OWN REPORTS</Title>
         <div>Bilan img</div>
       </div>
-      <div className="middle-content w-full h-96">
+      <div className="middle-content w-full">
         <Title level="h2">HOW TO START</Title>
         <Text>3 easy steps before starting your journey to the top</Text>
         <div className="cards-container flex gap-3 mt-6 justify-between">
@@ -140,24 +145,28 @@ export default function Home() {
             >
               <AccordionTrigger>
                 <span className="flex items-center gap-4">
-                  <span className="font-mono text-brand">
+                  <Text span mono color="brand">
                     {String(i + 1).padStart(2, "0")} /
-                  </span>
-                  <span>{f.title}</span>
+                  </Text>
+                  <Text span weight="medium">
+                    {f.title}
+                  </Text>
                 </span>
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                {f.detail}
+              <AccordionContent>
+                <Text color="secondary">{f.detail}</Text>
               </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
       </div>
-      <div className="bottom-cta mt-10 w-[50%] flex flex-col justify-center items-center">
+      <div className="bottom-cta mt-10 w-[50%] flex flex-col justify-center items-center mb-5">
         <Title level="h3">READY TO GRIND ?</Title>
         <Text size="small">Time to finally obtain your dream elo</Text>
         <div className="mt-5">
-          <Button variant="cta">Register</Button>
+          <Button variant="cta" onClick={() => navigate("/register")}>
+            Register
+          </Button>
         </div>
       </div>
     </div>

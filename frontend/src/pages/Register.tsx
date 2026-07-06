@@ -7,6 +7,7 @@ import Input from "../components/ui/Input/Input";
 import Button from "../components/ui/Button/Button";
 import Text from "../components/ui/Text/Text";
 import Alert from "../components/ui/Alert/Alert";
+import Logo from "../components/ui/Logo/Logo";
 import {
   Card,
   CardHeader,
@@ -36,7 +37,10 @@ export default function Register() {
   });
 
   return (
-    <div className="flex justify-center py-20">
+    <div className="flex flex-col items-center gap-8 py-20">
+      <Link to="/">
+        <Logo variant="white" size="large" />
+      </Link>
       <Card className="w-100 border-background-secondary-border">
         <CardHeader>
           <CardTitle>Create account</CardTitle>
