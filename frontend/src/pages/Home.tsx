@@ -123,10 +123,10 @@ export default function Home() {
         </div>
       </div>
       <div className="bottom-content mt-5 w-full">
-        <Title level="h2">NOT ONLY SOME STATS</Title>
+        <Title level="h2">MORE THAN SOME STATS</Title>
         <Text>
-          The main goal of CSGRIND is to help you track your progress to your
-          dream elo
+          The main goal of CSGRIND is to help you track your progress up until
+          the completion of your goal
         </Text>
         <Accordion
           multiple={false}
