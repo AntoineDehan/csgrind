@@ -5,13 +5,15 @@ import Text from "../components/ui/Text/Text";
 import Loader from "../components/ui/Loader/Loader";
 import { Card, CardContent } from "@/components/ui/card";
 import { useGoals, useGoalStats } from "../hooks/useGoals";
+import { useUser } from "../auth/useAuth";
 
 export default function Profile() {
-  const { data: goals, isLoading } = useGoals();
+  const { data: user, isLoading: userLoading } = useUser();
+  const { data: goals, isLoading: goalsLoading } = useGoals();
   const goal = goals?.find((g) => g.status === "in_progress");
   const { data: stats } = useGoalStats(goal?.id);
 
-  if (isLoading) {
+  if (userLoading || goalsLoading) {
     return (
       <Container>
         <div className="flex justify-center py-20">
@@ -26,9 +28,21 @@ export default function Profile() {
   return (
     <Container>
       <div className="flex gap-6 py-10">
-        <div className="size-16 shrink-0 rounded-full border border-background-secondary-border bg-background-secondary" />
+        {user?.image ? (
+          <img
+            src={user.image}
+            alt={user.name ?? "Avatar"}
+            className="size-16 shrink-0 rounded-full border border-background-secondary-border object-cover"
+          />
+        ) : (
+          <div className="size-16 shrink-0 rounded-full border border-background-secondary-border bg-background-secondary" />
+        )}
 
         <div className="flex-1">
+          <div className="mb-6">
+            <Title level="h1">{user?.name ?? "Player"}</Title>
+          </div>
+
           <Card className="border-background-secondary-border">
             <CardContent>
               {goal ? (
