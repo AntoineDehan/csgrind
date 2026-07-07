@@ -1,6 +1,10 @@
 import type { Request, Response } from "express";
 import * as userRepo from "../repositories/user.repository";
-import { getSteamRedirectUrl, verifySteamReturn } from "../lib/steam";
+import {
+  getSteamRedirectUrl,
+  verifySteamReturn,
+  fetchSteamPlayerSummary,
+} from "../lib/steam";
 import { signTokenSteam, verifyToken } from "../lib/jwt";
 import { AppError, UnauthorizedError } from "../errors/AppError";
 
@@ -34,6 +38,19 @@ export async function steamReturn(req: Request, res: Response) {
     );
 
     await userRepo.linkSteamAccount(userId, steam64Id);
+
+    try {
+      const summary = await fetchSteamPlayerSummary(steam64Id);
+      if (summary) {
+        await userRepo.updateUser(userId, {
+          name: summary.name || undefined,
+          image: summary.avatar || undefined,
+        });
+      }
+    } catch (error) {
+      console.error(`Steam profile sync failed for ${steam64Id}:`, error);
+    }
+
     res.redirect(`${front}/dashboard?steam=linked`);
   } catch {
     res.redirect(`${front}/dashboard?steam=error`);
