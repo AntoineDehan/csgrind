@@ -7,7 +7,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import SetGoal from "./pages/SetGoal";
-import Profile from "./pages/Profile";
+import Profile from "./pages/Profile/Profile";
 import ProtectedRoute from "./auth/ProtectedRoute";
 
 export const router = createBrowserRouter([

@@ -6,8 +6,9 @@ import styles from "./navbar.module.css";
 
 type NavItem = {
   to: string;
-  label: ReactNode;
+  label?: ReactNode;
   cta?: boolean;
+  avatar?: string | null;
 };
 
 type NavbarProps = {
@@ -27,8 +28,23 @@ export default function Navbar({ logo = true, aside = [] }: NavbarProps) {
       )}
 
       <div className={styles.aside}>
-        {aside.map((item) =>
-          item.cta ? (
+        {aside.map((item) => {
+          if (item.avatar !== undefined) {
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={styles.avatar}
+                aria-label="Profile"
+              >
+                {item.avatar && (
+                  <img src={item.avatar} alt="" className={styles.avatarImg} />
+                )}
+              </Link>
+            );
+          }
+
+          return item.cta ? (
             <Button
               key={item.to}
               variant="cta"
@@ -40,8 +56,8 @@ export default function Navbar({ logo = true, aside = [] }: NavbarProps) {
             <Link key={item.to} to={item.to} className={styles.link}>
               {item.label}
             </Link>
-          ),
-        )}
+          );
+        })}
       </div>
     </nav>
   );
