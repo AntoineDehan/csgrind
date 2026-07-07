@@ -36,3 +36,37 @@ export async function verifySteamReturn(
   if (!match || !match[1]) throw new Error("Could not extract steam64Id");
   return match[1];
 }
+
+const STEAM_SUMMARY_URL =
+  "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/";
+
+export type SteamPlayerSummary = {
+  name: string;
+  avatar: string;
+};
+
+export async function fetchSteamPlayerSummary(
+  steam64Id: string,
+): Promise<SteamPlayerSummary | null> {
+  const key = process.env.STEAM_API_KEY;
+  if (!key) throw new Error("STEAM_API_KEY is not configured");
+
+  const params = new URLSearchParams({ key, steamids: steam64Id });
+  const res = await fetch(`${STEAM_SUMMARY_URL}?${params.toString()}`);
+
+  if (!res.ok) throw new Error(`Steam summary request failed: ${res.status}`);
+
+  const data = (await res.json()) as {
+    response?: {
+      players?: { personaname?: string; avatarfull?: string }[];
+    };
+  };
+
+  const player = data.response?.players?.[0];
+  if (!player) return null;
+
+  return {
+    name: player.personaname ?? "",
+    avatar: player.avatarfull ?? "",
+  };
+}
