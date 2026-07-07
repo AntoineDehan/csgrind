@@ -40,3 +40,12 @@ export const goalSchema = z.object({
 });
 
 export type Goal = z.infer<typeof goalSchema>;
+
+export const goalStatsSchema = z.object({
+  startElo: z.number().nullable(),
+  currentElo: z.number().nullable(),
+  objectiveElo: z.number(),
+  percent: z.number(),
+});
+
+export type GoalStats = z.infer<typeof goalStatsSchema>;

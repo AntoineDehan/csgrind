@@ -9,6 +9,7 @@ export default function Layout() {
     ? [
         { to: "/dashboard", label: "Dashboard" },
         { to: "/reports", label: "Report" },
+        { to: "/profile", label: "Profile" },
       ]
     : [
         { to: "/login", label: "Login" },

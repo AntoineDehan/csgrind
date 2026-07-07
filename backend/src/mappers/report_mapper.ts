@@ -14,7 +14,7 @@ export function mapProfileToReport(
     leetifyRating: profile.ranks.leetify,
 
     premierRank: profile.ranks.premier,
-    faceitRank: profile.ranks.faceit,
+    faceitRank: profile.ranks.faceit_elo ?? undefined,
 
     accuracyHead: profile.stats.accuracy_head,
     accuracyEnemySpotted: profile.stats.accuracy_enemy_spotted,

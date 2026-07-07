@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import SetGoal from "./pages/SetGoal";
+import Profile from "./pages/Profile";
 import ProtectedRoute from "./auth/ProtectedRoute";
 
 export const router = createBrowserRouter([
@@ -19,6 +20,7 @@ export const router = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [
           { path: "dashboard", element: <Dashboard /> },
+          { path: "profile", element: <Profile /> },
           { path: "set-goal", element: <SetGoal /> },
           { path: "reports/:reportId", element: <ReportDetail /> },
         ],

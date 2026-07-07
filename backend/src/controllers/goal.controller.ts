@@ -85,6 +85,22 @@ export async function getProgress(req: Request, res: Response) {
   res.json(progress);
 }
 
+export async function getStats(req: Request, res: Response) {
+  const userId = getUserId(req);
+  const id = req.params.id;
+  if (typeof id !== "string") {
+    throw new BadRequestError("Invalid id");
+  }
+
+  const goal = await goalRepo.findGoalByIdForUser(id, userId);
+  if (!goal) {
+    throw new NotFoundError("Goal not found");
+  }
+
+  const stats = await reportHandler.getGoalStats(goal);
+  res.json(stats);
+}
+
 export async function removeGoal(req: Request, res: Response) {
   const userId = getUserId(req);
   const id = req.params.id;
