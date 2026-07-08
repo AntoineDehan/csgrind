@@ -29,6 +29,8 @@ export default function SetGoal() {
   const mutation = useMutation({
     mutationFn: createGoal,
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["goals"] });
+      queryClient.invalidateQueries({ queryKey: ["goal-stats"] });
       queryClient.invalidateQueries({ queryKey: ["reports"] });
       navigate("/dashboard");
     },
