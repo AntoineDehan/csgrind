@@ -3,6 +3,7 @@ import { fetchLeetifyProfile } from "../lib/leetify";
 import { mapProfileToReport } from "../mappers/report_mapper";
 import { findUserById } from "../repositories/user.repository";
 import * as reportRepo from "../repositories/report.repository";
+import * as tipRepo from "../repositories/tip.repository";
 import { compareReports } from "../comparators/report_comparator";
 import { selectTips } from "../selectors/tip_selector";
 import { selectTasks } from "../selectors/task_selector";
@@ -26,7 +27,8 @@ export async function generateReport(userId: string, goalId: string) {
 }
 
 async function attachTips(report: Report) {
-  const tipIds = selectTips(report);
+  const tips = await tipRepo.findAllTips();
+  const tipIds = selectTips(report, tips);
   if (tipIds.length === 0) return;
 
   await reportRepo.createReportTips(report.id, tipIds);

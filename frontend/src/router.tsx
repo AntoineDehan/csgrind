@@ -8,7 +8,9 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import SetGoal from "./pages/SetGoal";
 import Profile from "./pages/Profile/Profile";
+import Tips from "./pages/Admin/Tips/Tips";
 import ProtectedRoute from "./auth/ProtectedRoute";
+import AdminRoute from "./auth/AdminRoute";
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +25,10 @@ export const router = createBrowserRouter([
           { path: "profile", element: <Profile /> },
           { path: "set-goal", element: <SetGoal /> },
           { path: "reports/:reportId", element: <ReportDetail /> },
+          {
+            element: <AdminRoute />,
+            children: [{ path: "admin/tips", element: <Tips /> }],
+          },
         ],
       },
       { path: "*", element: <NotFound /> },
