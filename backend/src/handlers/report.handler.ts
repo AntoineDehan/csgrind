@@ -1,4 +1,4 @@
-import type { Report } from "../../generated/prisma/client";
+import type { Report, Goal } from "../../generated/prisma/client";
 import { fetchLeetifyProfile } from "../lib/leetify";
 import { mapProfileToReport } from "../mappers/report_mapper";
 import { findUserById } from "../repositories/user.repository";
@@ -52,4 +52,26 @@ export async function getGoalProgress(goalId: string) {
     comparedTo: current.createdAt,
     stats: compareReports(previous, current),
   };
+}
+
+export async function getGoalStats(goal: Goal) {
+  const [first, last] = await Promise.all([
+    reportRepo.findEarliestReport(goal.id),
+    reportRepo.findLatestReport(goal.id),
+  ]);
+
+  const field = goal.matchmaking === "PREMIER" ? "premierRank" : "faceitRank";
+  const startElo = first?.[field] ?? null;
+  const currentElo = last?.[field] ?? null;
+  const objectiveElo = goal.eloGoal;
+
+  let percent = 0;
+  if (startElo !== null && currentElo !== null && objectiveElo > startElo) {
+    percent = Math.round(
+      ((currentElo - startElo) / (objectiveElo - startElo)) * 100,
+    );
+    percent = Math.max(0, Math.min(100, percent));
+  }
+
+  return { startElo, currentElo, objectiveElo, percent };
 }

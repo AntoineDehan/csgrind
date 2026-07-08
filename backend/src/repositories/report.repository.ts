@@ -24,6 +24,20 @@ export function findRecentReports(goalId: string, take: number) {
   });
 }
 
+export function findEarliestReport(goalId: string) {
+  return prisma.report.findFirst({
+    where: { goalId },
+    orderBy: { createdAt: "asc" },
+  });
+}
+
+export function findLatestReport(goalId: string) {
+  return prisma.report.findFirst({
+    where: { goalId },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
 export function createReport(data: CreateReportInput) {
   return prisma.report.create({
     data: data as Prisma.ReportUncheckedCreateInput,
