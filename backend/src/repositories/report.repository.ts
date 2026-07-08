@@ -13,7 +13,10 @@ export function findReportsByUser(userId: string) {
 }
 
 export function findReportByIdForUser(id: string, userId: string) {
-  return prisma.report.findFirst({ where: { id, goal: { userId } } });
+  return prisma.report.findFirst({
+    where: { id, goal: { userId } },
+    include: { tips: { include: { tip: true } } },
+  });
 }
 
 export function findRecentReports(goalId: string, take: number) {

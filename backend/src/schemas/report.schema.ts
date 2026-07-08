@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { tipSchema } from "./tip.schema";
 
 export const createReportSchema = z.object({
   goalId: z.uuid(),
@@ -28,3 +29,47 @@ export const createReportSchema = z.object({
 });
 
 export type CreateReportInput = z.infer<typeof createReportSchema>;
+
+export const reportSchema = z.object({
+  id: z.uuid(),
+  createdAt: z.iso.datetime(),
+
+  aimRating: z.coerce.number().nullable(),
+  utilityRating: z.coerce.number().nullable(),
+  positioningRating: z.coerce.number().nullable(),
+  leetifyRating: z.coerce.number().nullable(),
+
+  premierRank: z.number().int().nullable(),
+  faceitRank: z.number().int().nullable(),
+
+  accuracyHead: z.coerce.number().nullable(),
+  accuracyEnemySpotted: z.coerce.number().nullable(),
+  sprayAccuracy: z.coerce.number().nullable(),
+  counterStrafingRatio: z.coerce.number().nullable(),
+  preaim: z.coerce.number().nullable(),
+  reactionTimeMs: z.coerce.number().nullable(),
+
+  flashHitPerFlash: z.coerce.number().nullable(),
+  flashAvgDuration: z.coerce.number().nullable(),
+  flashLeadingToKill: z.coerce.number().nullable(),
+  heFoesDamageAvg: z.coerce.number().nullable(),
+  utilityOnDeathAvg: z.coerce.number().nullable(),
+
+  ctOpeningSuccess: z.coerce.number().nullable(),
+  tOpeningSuccess: z.coerce.number().nullable(),
+  tradeKillsSuccess: z.coerce.number().nullable(),
+  tradeDeathsSuccess: z.coerce.number().nullable(),
+
+  winrate: z.coerce.number().nullable(),
+  totalMatches: z.number().int().nullable(),
+
+  goalId: z.uuid(),
+});
+
+export type Report = z.infer<typeof reportSchema>;
+
+export const reportDetailSchema = reportSchema.extend({
+  tips: z.array(z.object({ tip: tipSchema })),
+});
+
+export type ReportDetail = z.infer<typeof reportDetailSchema>;
