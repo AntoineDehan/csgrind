@@ -4,9 +4,11 @@ import Title from "../../components/ui/Title/Title";
 import Text from "../../components/ui/Text/Text";
 import Loader from "../../components/ui/Loader/Loader";
 import GoalTracker from "../../components/ui/GoalTracker/GoalTracker";
+import BadgeContainer from "../../components/ui/BadgeContainer/BadgeContainer";
+import Badge from "../../components/ui/Badge/Badge";
 import ProfileContainer from "./components/ProfileContainer/ProfileContainer";
 import { useGoals, useGoalStats } from "../../hooks/useGoals";
-import { useUserBadges } from "../../hooks/useBadges";
+import { useBadges, useUserBadges } from "../../hooks/useBadges";
 import { useUser } from "../../auth/useAuth";
 
 export default function Profile() {
@@ -15,6 +17,7 @@ export default function Profile() {
   const goal = goals?.find((g) => g.status === "in_progress");
   const { data: stats } = useGoalStats(goal?.id);
   const { data: badges } = useUserBadges();
+  const { data: allBadges } = useBadges();
 
   if (userLoading || goalsLoading) {
     return (
@@ -61,26 +64,16 @@ export default function Profile() {
           )}
 
           <Section title="Badges" className="mt-8">
-            <ProfileContainer>
-              {badges && badges.length > 0 ? (
-                <ul className="flex flex-wrap gap-4">
-                  {badges.map((entry) => (
-                    <li
-                      key={entry.badge.id}
-                      className="flex w-24 flex-col items-center gap-1 text-center"
-                      title={entry.badge.description}
-                    >
-                      <span className="text-3xl">{entry.badge.icon}</span>
-                      <Text span size="small">
-                        {entry.badge.name}
-                      </Text>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <Text color="secondary">No badges yet.</Text>
-              )}
-            </ProfileContainer>
+            <BadgeContainer maxCount={allBadges?.length ?? 0}>
+              {badges?.map((entry) => (
+                <Badge
+                  key={entry.badge.id}
+                  icon={entry.badge.icon}
+                  name={entry.badge.name}
+                  description={entry.badge.description}
+                />
+              ))}
+            </BadgeContainer>
           </Section>
         </div>
       </div>

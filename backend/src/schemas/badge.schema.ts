@@ -19,6 +19,8 @@ export const badgeSchema = z.object({
   icon: z.string(),
 });
 
+export type Badge = z.infer<typeof badgeSchema>;
+
 export const userBadgeSchema = z.object({
   obtainedAt: z.iso.datetime(),
   badge: badgeSchema,
