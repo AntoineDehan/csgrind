@@ -32,7 +32,9 @@ export async function steamReturn(req: Request, res: Response) {
   try {
     if (typeof state !== "string") throw new Error("Missing state");
 
-    const userId = verifyToken(state).userId;
+    const payload = verifyToken(state);
+    if (payload.purpose !== "steam_link") throw new Error("Invalid state token");
+    const userId = payload.userId;
     const steam64Id = await verifySteamReturn(
       req.query as Record<string, string>,
     );
