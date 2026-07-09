@@ -3,6 +3,8 @@ import { useUser } from "../auth/useAuth";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { startSteamLink } from "../services/steam";
 import { getReports } from "../services/reports";
+import { useGoals } from "../hooks/useGoals";
+import TaskList from "../components/ui/TaskList/TaskList";
 import Logo from "../components/ui/Logo/Logo";
 
 export default function Dashboard() {
@@ -11,6 +13,8 @@ export default function Dashboard() {
     queryKey: ["reports"],
     queryFn: getReports,
   });
+  const { data: goals } = useGoals();
+  const activeGoal = goals?.find((goal) => goal.status === "in_progress");
 
   const steamMutation = useMutation({
     mutationFn: startSteamLink,
@@ -37,6 +41,8 @@ export default function Dashboard() {
           <button>Set a goal</button>
         </Link>
       )}
+
+      {activeGoal && <TaskList goalId={activeGoal.id} />}
 
       <h2>My reports</h2>
       <ul>

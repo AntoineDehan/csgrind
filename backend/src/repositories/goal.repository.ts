@@ -21,8 +21,14 @@ export function findGoalByIdForUser(id: string, userId: string) {
 }
 
 export function createGoal(data: CreateGoalInput, userId: string) {
-  return prisma.goal.create({
-    data: { ...data, userId } as Prisma.GoalUncheckedCreateInput,
+  return prisma.$transaction(async (tx) => {
+    await tx.goal.updateMany({
+      where: { userId, status: "in_progress" },
+      data: { status: "abandoned" },
+    });
+    return tx.goal.create({
+      data: { ...data, userId } as Prisma.GoalUncheckedCreateInput,
+    });
   });
 }
 

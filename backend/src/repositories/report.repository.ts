@@ -13,7 +13,10 @@ export function findReportsByUser(userId: string) {
 }
 
 export function findReportByIdForUser(id: string, userId: string) {
-  return prisma.report.findFirst({ where: { id, goal: { userId } } });
+  return prisma.report.findFirst({
+    where: { id, goal: { userId } },
+    include: { tips: { include: { tip: true } } },
+  });
 }
 
 export function findRecentReports(goalId: string, take: number) {
@@ -58,5 +61,47 @@ export function createReportTasks(reportId: string, tasks: ReportTaskInput[]) {
       trackCurrent: task.trackCurrent,
       trackTarget: task.trackTarget,
     })),
+  });
+}
+
+export function findActiveChallenges(goalId: string) {
+  return prisma.reportTask.findMany({
+    where: {
+      report: { goalId },
+      task: { isTrackable: true },
+      isCompleted: false,
+    },
+    include: { task: true },
+  });
+}
+
+export function findManualReportTasks(reportId: string) {
+  return prisma.reportTask.findMany({
+    where: { reportId, task: { isTrackable: false } },
+    include: { task: true },
+  });
+}
+
+export function completeChallenges(
+  keys: { reportId: string; taskId: string }[],
+) {
+  return prisma.$transaction(
+    keys.map(({ reportId, taskId }) =>
+      prisma.reportTask.update({
+        where: { reportId_taskId: { reportId, taskId } },
+        data: { isCompleted: true },
+      }),
+    ),
+  );
+}
+
+export function setReportTaskCompleted(
+  reportId: string,
+  taskId: string,
+  isCompleted: boolean,
+) {
+  return prisma.reportTask.update({
+    where: { reportId_taskId: { reportId, taskId } },
+    data: { isCompleted },
   });
 }

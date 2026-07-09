@@ -3,9 +3,15 @@ import { fetchLeetifyProfile } from "../lib/leetify";
 import { mapProfileToReport } from "../mappers/report_mapper";
 import { findUserById } from "../repositories/user.repository";
 import * as reportRepo from "../repositories/report.repository";
+import * as tipRepo from "../repositories/tip.repository";
+import * as taskRepo from "../repositories/task.repository";
 import { compareReports } from "../comparators/report_comparator";
 import { selectTips } from "../selectors/tip_selector";
-import { selectTasks } from "../selectors/task_selector";
+import {
+  selectManualTasks,
+  selectChallenges,
+  CHALLENGE_SLOTS,
+} from "../selectors/task_selector";
 import { BadRequestError } from "../errors/AppError";
 
 export async function generateReport(userId: string, goalId: string) {
@@ -26,17 +32,101 @@ export async function generateReport(userId: string, goalId: string) {
 }
 
 async function attachTips(report: Report) {
-  const tipIds = selectTips(report);
+  const tips = await tipRepo.findAllTips();
+  const tipIds = selectTips(report, tips);
   if (tipIds.length === 0) return;
 
   await reportRepo.createReportTips(report.id, tipIds);
 }
 
 async function attachTasks(report: Report) {
-  const tasks = selectTasks(report);
-  if (tasks.length === 0) return;
+  const recent = await reportRepo.findRecentReports(report.goalId, 2);
+  const previous = recent[1];
+  if (!previous) return;
 
-  await reportRepo.createReportTasks(report.id, tasks);
+  const tasks = await taskRepo.findAllTasks();
+
+  const active = await reportRepo.findActiveChallenges(report.goalId);
+  const completedKeys: { reportId: string; taskId: string }[] = [];
+  const excludeStats = new Set<string>();
+  let activeCount = 0;
+  for (const challenge of active) {
+    if (isChallengeComplete(challenge, report)) {
+      completedKeys.push({
+        reportId: challenge.reportId,
+        taskId: challenge.taskId,
+      });
+      continue;
+    }
+    activeCount++;
+    if (challenge.task.taskStat) excludeStats.add(challenge.task.taskStat);
+  }
+  if (completedKeys.length > 0) {
+    await reportRepo.completeChallenges(completedKeys);
+  }
+
+  const deltas = compareReports(previous, report);
+  const challenges = selectChallenges(
+    deltas,
+    tasks,
+    CHALLENGE_SLOTS - activeCount,
+    report,
+    excludeStats,
+  );
+  const manualIds = selectManualTasks(tasks);
+
+  const rows = [
+    ...challenges.map((challenge) => ({
+      taskId: challenge.taskId,
+      trackCurrent: challenge.trackCurrent,
+      trackTarget: challenge.trackTarget,
+    })),
+    ...manualIds.map((taskId) => ({
+      taskId,
+      trackCurrent: null,
+      trackTarget: null,
+    })),
+  ];
+  if (rows.length > 0) {
+    await reportRepo.createReportTasks(report.id, rows);
+  }
+}
+
+type ActiveChallenge = {
+  reportId: string;
+  taskId: string;
+  trackCurrent: unknown;
+  trackTarget: unknown;
+  task: { taskStat: string | null };
+};
+
+function isChallengeComplete(
+  challenge: ActiveChallenge,
+  report: Report,
+): boolean {
+  const stat = challenge.task.taskStat;
+  if (!stat || challenge.trackCurrent == null || challenge.trackTarget == null) {
+    return false;
+  }
+  const value = report[stat as keyof Report];
+  if (value == null) return false;
+  return (
+    challengeProgress(
+      Number(value),
+      Number(challenge.trackCurrent),
+      Number(challenge.trackTarget),
+    ) >= 100
+  );
+}
+
+function challengeProgress(
+  current: number,
+  baseline: number,
+  target: number,
+): number {
+  if (target === baseline) return 0;
+  const percent = ((current - baseline) / (target - baseline)) * 100;
+  return Math.max(0, Math.min(100, Math.round(percent)));
 }
 
 export async function getGoalProgress(goalId: string) {
@@ -74,4 +164,51 @@ export async function getGoalStats(goal: Goal) {
   }
 
   return { startElo, currentElo, objectiveElo, percent };
+}
+
+export async function getGoalTasks(goal: Goal) {
+  const latest = await reportRepo.findLatestReport(goal.id);
+  if (!latest) return { challenges: [], manual: [] };
+
+  const [active, manual] = await Promise.all([
+    reportRepo.findActiveChallenges(goal.id),
+    reportRepo.findManualReportTasks(latest.id),
+  ]);
+
+  const challenges = active.map((challenge) => {
+    const stat = challenge.task.taskStat;
+    const baseline =
+      challenge.trackCurrent == null ? null : Number(challenge.trackCurrent);
+    const target =
+      challenge.trackTarget == null ? null : Number(challenge.trackTarget);
+    const value = stat ? latest[stat as keyof Report] : null;
+    const current = value == null ? null : Number(value);
+
+    let targetPct = 0;
+    let currentPct = 0;
+    if (baseline != null && target != null && baseline !== 0) {
+      targetPct = Math.round((Math.abs(target - baseline) / baseline) * 100);
+      if (current != null) {
+        const improvement = ((current - baseline) / baseline) * 100;
+        const good = target >= baseline ? improvement : -improvement;
+        currentPct = Math.max(0, Math.round(good));
+      }
+    }
+
+    return {
+      taskId: challenge.taskId,
+      content: challenge.task.content,
+      currentPct,
+      targetPct,
+    };
+  });
+
+  const manualTasks = manual.map((task) => ({
+    reportId: task.reportId,
+    taskId: task.taskId,
+    content: task.task.content,
+    isCompleted: task.isCompleted,
+  }));
+
+  return { challenges, manual: manualTasks };
 }
