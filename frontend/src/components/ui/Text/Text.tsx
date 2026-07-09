@@ -1,9 +1,8 @@
 import type { ReactNode } from "react";
-import type { Size } from "../types";
+import type { Size, Color } from "../types";
 import styles from "./text.module.css";
 
 type Weight = "normal" | "medium" | "bold";
-type Color = "primary" | "secondary" | "brand";
 
 type TextProps = {
   children: ReactNode;

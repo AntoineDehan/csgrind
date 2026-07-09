@@ -29,3 +29,18 @@ export function updateBadge(id: string, data: UpdateBadgeInput) {
 export function deleteBadge(id: string) {
   return prisma.badge.delete({ where: { id } });
 }
+
+export function findUserBadges(userId: string) {
+  return prisma.userBadge.findMany({
+    where: { userId },
+    include: { badge: true },
+    orderBy: { obtainedAt: "desc" },
+  });
+}
+
+export function createUserBadges(userId: string, badgeIds: string[]) {
+  return prisma.userBadge.createMany({
+    data: badgeIds.map((badgeId) => ({ userId, badgeId })),
+    skipDuplicates: true,
+  });
+}

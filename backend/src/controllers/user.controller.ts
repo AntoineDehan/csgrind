@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import * as userRepo from "../repositories/user.repository";
+import * as badgeRepo from "../repositories/badge.repository";
 import { BadRequestError, NotFoundError } from "../errors/AppError";
 import { updateUserSchema } from "../schemas/user.schema";
 import { getUserId } from "../lib/getUserId";
@@ -7,6 +8,12 @@ import { getUserId } from "../lib/getUserId";
 export async function getUsers(req: Request, res: Response) {
   const users = await userRepo.findAllUsers();
   res.json(users);
+}
+
+export async function getUserBadges(req: Request, res: Response) {
+  const userId = getUserId(req);
+  const badges = await badgeRepo.findUserBadges(userId);
+  res.json(badges);
 }
 
 export async function getUser(req: Request, res: Response) {

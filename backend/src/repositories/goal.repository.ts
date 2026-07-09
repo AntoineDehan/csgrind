@@ -43,6 +43,10 @@ export function deleteGoal(id: string) {
   return prisma.goal.delete({ where: { id } });
 }
 
+export function countCompletedGoals(userId: string) {
+  return prisma.goal.count({ where: { userId, status: "completed" } });
+}
+
 export function checkToUpdateGoal() {
   return prisma.$queryRaw<DueGoalRow[]>`
     SELECT

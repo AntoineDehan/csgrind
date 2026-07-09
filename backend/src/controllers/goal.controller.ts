@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import * as goalRepo from "../repositories/goal.repository";
 import * as reportHandler from "../handlers/report.handler";
+import * as goalHandler from "../handlers/goal.handler";
 import * as userRepo from "../repositories/user.repository";
 import { createGoalSchema, updateGoalSchema } from "../schemas/goal.schema";
 import { BadRequestError, NotFoundError } from "../errors/AppError";
@@ -77,7 +78,7 @@ export async function getProgress(req: Request, res: Response) {
     throw new NotFoundError("Goal not found");
   }
 
-  const progress = await reportHandler.getGoalProgress(id);
+  const progress = await goalHandler.getGoalProgress(id);
   if (!progress) {
     throw new NotFoundError("Not enough reports to compare");
   }
@@ -97,7 +98,7 @@ export async function getStats(req: Request, res: Response) {
     throw new NotFoundError("Goal not found");
   }
 
-  const stats = await reportHandler.getGoalStats(goal);
+  const stats = await goalHandler.getGoalStats(goal);
   res.json(stats);
 }
 
@@ -113,7 +114,7 @@ export async function getTasks(req: Request, res: Response) {
     throw new NotFoundError("Goal not found");
   }
 
-  const tasks = await reportHandler.getGoalTasks(goal);
+  const tasks = await goalHandler.getGoalTasks(goal);
   res.json(tasks);
 }
 
