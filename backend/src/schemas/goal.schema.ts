@@ -46,6 +46,7 @@ export const goalStatsSchema = z.object({
   currentElo: z.number().nullable(),
   objectiveElo: z.number(),
   percent: z.number(),
+  nextReportAt: z.iso.datetime(),
 });
 
 export type GoalStats = z.infer<typeof goalStatsSchema>;

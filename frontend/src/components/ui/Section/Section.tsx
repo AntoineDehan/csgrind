@@ -19,8 +19,10 @@ export default function Section({
 }: SectionProps) {
   return (
     <section id={id} className={className}>
-      {title && <Title level="h2">{title}</Title>}
-      {subtitle && <Text>{subtitle}</Text>}
+      <div className="mb-3">
+        {title && <Title level="h2">{title}</Title>}
+        {subtitle && <Text>{subtitle}</Text>}
+      </div>
       {children}
     </section>
   );

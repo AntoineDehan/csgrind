@@ -10,6 +10,7 @@ import ProfileContainer from "./components/ProfileContainer/ProfileContainer";
 import { useGoals, useGoalStats } from "../../hooks/useGoals";
 import { useBadges, useUserBadges } from "../../hooks/useBadges";
 import { useUser } from "../../auth/useAuth";
+import { formatDate } from "@/lib/date";
 
 export default function Profile() {
   const { data: user, isLoading: userLoading } = useUser();
@@ -30,25 +31,35 @@ export default function Profile() {
   }
 
   const percent = stats?.percent ?? 0;
+  const nextGoalDate = user?.createdAt;
 
   return (
     <Container>
-      <div className="flex gap-6 py-10">
-        {user?.image ? (
-          <img
-            src={user.image}
-            alt={user.name ?? "Avatar"}
-            className="size-16 shrink-0 rounded-full border border-background-secondary-border object-cover"
-          />
-        ) : (
-          <div className="size-16 shrink-0 rounded-full border border-background-secondary-border bg-background-secondary" />
-        )}
+      <div className="flex flex-col gap-6 pt-10">
+        <div className="profile-details flex justify-between items-end mb-6">
+          <div className="flex gap-3 items-center">
+            {user?.image ? (
+              <img
+                src={user.image}
+                alt={user.name ?? "Avatar"}
+                className="size-24 shrink-0 rounded-full border border-background-secondary-border object-cover"
+              />
+            ) : (
+              <div className="size-24 shrink-0 rounded-full border border-background-secondary-border bg-background-secondary" />
+            )}
+            <div>
+              <Title>{user?.name ?? "Player"}</Title>
+              <Text color="secondary">
+                Member since {formatDate(nextGoalDate)}
+              </Text>
+            </div>
+          </div>
+          <div className="pb-2">
+            <Text color="secondary">{user?.steam64Id}</Text>
+          </div>
+        </div>
 
         <div className="flex-1">
-          <div className="mb-6">
-            <Title>{user?.name ?? "Player"}</Title>
-          </div>
-
           {goal ? (
             <GoalTracker
               objective={goal.matchmaking}
@@ -56,6 +67,7 @@ export default function Profile() {
               currentElo={stats?.currentElo ?? null}
               objectiveElo={stats?.objectiveElo ?? goal.eloGoal}
               percent={percent}
+              nextReportAt={stats?.nextReportAt}
             />
           ) : (
             <ProfileContainer>
