@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 
 export type TokenPayload = {
   userId: string;
+  purpose?: "steam_link";
 };
 
 function getSecret() {
@@ -12,7 +13,7 @@ function getSecret() {
 export function signToken(userId: string): string {
   const secretToken = getSecret();
 
-  if (!secretToken) throw "Secret token missing";
+  if (!secretToken) throw new Error("JWT_SECRET is not configured");
   const signedToken = jwt.sign(
     {
       userId,
@@ -27,10 +28,11 @@ export function signToken(userId: string): string {
 export function signTokenSteam(userId: string): string {
   const secretToken = getSecret();
 
-  if (!secretToken) throw "Secret token missing";
+  if (!secretToken) throw new Error("JWT_SECRET is not configured");
   const signedToken = jwt.sign(
     {
       userId,
+      purpose: "steam_link",
     },
     secretToken,
     { expiresIn: "10min" },
@@ -42,9 +44,11 @@ export function signTokenSteam(userId: string): string {
 export function verifyToken(token: string): TokenPayload {
   const secretToken = getSecret();
 
-  if (!secretToken) throw "Secret token missing";
+  if (!secretToken) throw new Error("JWT_SECRET is not configured");
 
-  const decodedToken = jwt.verify(token, secretToken);
+  const decodedToken = jwt.verify(token, secretToken, {
+    algorithms: ["HS256"],
+  });
 
   return decodedToken as TokenPayload;
 }

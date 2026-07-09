@@ -11,6 +11,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
 
   try {
     const payload = verifyToken(token);
+    if (payload.purpose === "steam_link") throw new UnauthorizedError();
     req.userId = payload.userId;
   } catch {
     throw new UnauthorizedError();

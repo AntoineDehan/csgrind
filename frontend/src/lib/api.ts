@@ -1,6 +1,7 @@
-import { getToken } from "./token";
+import { getToken, clearToken } from "./token";
+import { queryClient } from "./queryClient";
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 type ApiErrorBody = {
   message?: string;
@@ -20,6 +21,11 @@ export async function apiFetch<T>(
       ...options.headers,
     },
   });
+
+  if (res.status === 401) {
+    clearToken();
+    queryClient.setQueryData(["me"], null);
+  }
 
   if (!res.ok) {
     const body = (await res.json().catch(() => null)) as ApiErrorBody | null;

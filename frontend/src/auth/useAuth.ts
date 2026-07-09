@@ -27,7 +27,11 @@ export function useRegister() {
   return useMutation({
     mutationFn: async (credentials: Credentials) => {
       await register(credentials);
-      return login(credentials);
+      try {
+        return await login(credentials);
+      } catch {
+        throw new Error("Account created. Please sign in.");
+      }
     },
     onSuccess: ({ token }) => {
       setToken(token);

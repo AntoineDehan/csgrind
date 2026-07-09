@@ -4,7 +4,8 @@ export const createUserSchema = z.object({
   email: z.email(),
   password: z
     .string()
-    .min(8, "Password must be at least 8 characters long"),
+    .min(8, "Password must be at least 8 characters long")
+    .max(72, "Password must be at most 72 characters"),
 });
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;
