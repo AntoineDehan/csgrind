@@ -6,6 +6,7 @@ import Loader from "../../components/ui/Loader/Loader";
 import GoalTracker from "../../components/ui/GoalTracker/GoalTracker";
 import ProfileContainer from "./components/ProfileContainer/ProfileContainer";
 import { useGoals, useGoalStats } from "../../hooks/useGoals";
+import { useUserBadges } from "../../hooks/useBadges";
 import { useUser } from "../../auth/useAuth";
 
 export default function Profile() {
@@ -13,6 +14,7 @@ export default function Profile() {
   const { data: goals, isLoading: goalsLoading } = useGoals();
   const goal = goals?.find((g) => g.status === "in_progress");
   const { data: stats } = useGoalStats(goal?.id);
+  const { data: badges } = useUserBadges();
 
   if (userLoading || goalsLoading) {
     return (
@@ -60,7 +62,24 @@ export default function Profile() {
 
           <Section title="Badges" className="mt-8">
             <ProfileContainer>
-              <Text color="secondary">No badges yet.</Text>
+              {badges && badges.length > 0 ? (
+                <ul className="flex flex-wrap gap-4">
+                  {badges.map((entry) => (
+                    <li
+                      key={entry.badge.id}
+                      className="flex w-24 flex-col items-center gap-1 text-center"
+                      title={entry.badge.description}
+                    >
+                      <span className="text-3xl">{entry.badge.icon}</span>
+                      <Text span size="small">
+                        {entry.badge.name}
+                      </Text>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <Text color="secondary">No badges yet.</Text>
+              )}
             </ProfileContainer>
           </Section>
         </div>

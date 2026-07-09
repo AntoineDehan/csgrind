@@ -168,7 +168,7 @@ model ReportTask {
 
 model Badge {
   id          String @id @default(uuid())
-  name        String @db.VarChar(100)
+  name        String @unique @db.VarChar(100)
   description String @db.Text
   icon        String @db.VarChar(500)
 
