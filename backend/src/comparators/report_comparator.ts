@@ -1,6 +1,6 @@
 import type { Report } from "../../generated/prisma/client";
 
-const STAT_DIRECTION = {
+export const STAT_DIRECTION = {
   aimRating: "higher",
   utilityRating: "higher",
   positioningRating: "higher",
@@ -25,7 +25,7 @@ const STAT_DIRECTION = {
   winrate: "higher",
 } as const;
 
-type StatKey = keyof typeof STAT_DIRECTION;
+export type StatKey = keyof typeof STAT_DIRECTION;
 
 export type StatDelta = {
   stat: StatKey;

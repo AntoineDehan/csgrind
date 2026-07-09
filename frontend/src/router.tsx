@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import SetGoal from "./pages/SetGoal";
 import Profile from "./pages/Profile/Profile";
 import Tips from "./pages/Admin/Tips/Tips";
+import Tasks from "./pages/Admin/Tasks/Tasks";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import AdminRoute from "./auth/AdminRoute";
 
@@ -29,7 +30,10 @@ export const router = createBrowserRouter([
           { path: "reports/:reportId", element: <ReportDetail /> },
           {
             element: <AdminRoute />,
-            children: [{ path: "admin/tips", element: <Tips /> }],
+            children: [
+              { path: "admin/tips", element: <Tips /> },
+              { path: "admin/tasks", element: <Tasks /> },
+            ],
           },
         ],
       },

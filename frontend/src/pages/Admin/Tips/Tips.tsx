@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, type SyntheticEvent } from "react";
 import Container from "../../../components/ui/Container/Container";
 import Title from "../../../components/ui/Title/Title";
 import Text from "../../../components/ui/Text/Text";
@@ -8,27 +8,7 @@ import Button from "../../../components/ui/Button/Button";
 import Alert from "../../../components/ui/Alert/Alert";
 import Loader from "../../../components/ui/Loader/Loader";
 import { useTips, useCreateTip, useDeleteTip } from "../../../hooks/useTips";
-
-const TIP_CATEGORIES = [
-  { value: "accuracyHead", label: "Headshot accuracy" },
-  { value: "accuracyEnemySpotted", label: "Spotted accuracy" },
-  { value: "sprayAccuracy", label: "Spray accuracy" },
-  { value: "counterStrafingRatio", label: "Counter-strafing" },
-  { value: "preaim", label: "Pre-aim" },
-  { value: "reactionTimeMs", label: "Reaction time" },
-  { value: "aimRating", label: "Aim rating" },
-  { value: "utilityRating", label: "Utility rating" },
-  { value: "positioningRating", label: "Positioning rating" },
-  { value: "flashHitPerFlash", label: "Flash efficiency" },
-  { value: "flashAvgDuration", label: "Flash duration" },
-  { value: "flashLeadingToKill", label: "Flash assists" },
-  { value: "heFoesDamageAvg", label: "HE damage" },
-  { value: "utilityOnDeathAvg", label: "Unused utility on death" },
-  { value: "ctOpeningSuccess", label: "CT opening duels" },
-  { value: "tOpeningSuccess", label: "T opening duels" },
-  { value: "tradeKillsSuccess", label: "Trade kills" },
-  { value: "tradeDeathsSuccess", label: "Trade deaths" },
-];
+import { STAT_OPTIONS } from "../../../lib/statOptions";
 
 export default function Tips() {
   const { data: tips, isLoading } = useTips();
@@ -40,7 +20,7 @@ export default function Tips() {
   const [content, setContent] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(event: FormEvent) {
+  function handleSubmit(event: SyntheticEvent) {
     event.preventDefault();
     setError(null);
 
@@ -75,7 +55,7 @@ export default function Tips() {
               Category
             </Text>
             <Select
-              options={TIP_CATEGORIES}
+              options={STAT_OPTIONS}
               value={category}
               onChange={setCategory}
               aria-label="Category"
