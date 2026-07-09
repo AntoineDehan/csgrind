@@ -8,9 +8,12 @@ import {
 export const MANUAL_TASK_COUNT = 5;
 export const CHALLENGE_SLOTS = 2;
 
-const DEFAULT_CHALLENGE_PCT = 0.1;
+const DEFAULT_CHALLENGE_PCT = 0.05;
 const CHALLENGE_PCT: Partial<Record<StatKey, number>> = {
-  heFoesDamageAvg: 0.05,
+  sprayAccuracy: 0.1,
+  accuracyHead: 0.1,
+  utilityOnDeathAvg: 0.1,
+  flashLeadingToKill: 0.1,
 };
 
 export type SelectedChallenge = {
