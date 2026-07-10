@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import * as reportRepo from "../repositories/report.repository";
+import * as reportHandler from "../handlers/report.handler";
 import { toggleReportTaskSchema } from "../schemas/task.schema";
 import { BadRequestError, NotFoundError } from "../errors/AppError";
 import { getUserId } from "../lib/getUserId";
@@ -18,7 +19,7 @@ export async function getReport(req: Request, res: Response) {
     throw new BadRequestError("Invalid id");
   }
 
-  const report = await reportRepo.findReportByIdForUser(id, userId);
+  const report = await reportHandler.getReportDetail(id, userId);
   if (!report) {
     throw new NotFoundError("Report not found");
   }

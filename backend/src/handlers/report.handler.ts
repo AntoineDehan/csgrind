@@ -132,3 +132,16 @@ function challengeProgress(
   const percent = ((current - baseline) / (target - baseline)) * 100;
   return Math.max(0, Math.min(100, Math.round(percent)));
 }
+
+export async function getReportDetail(reportId: string, userId: string) {
+  const report = await reportRepo.findReportByIdForUser(reportId, userId);
+  if (!report) return null;
+
+  const [previous, index] = await Promise.all([
+    reportRepo.findPreviousReport(report.goalId, report.createdAt),
+    reportRepo.countReportsUpTo(report.goalId, report.createdAt),
+  ]);
+  const comparison = previous ? compareReports(previous, report) : [];
+
+  return { ...report, comparison, index };
+}

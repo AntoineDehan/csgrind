@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import styles from "./title.module.css";
 
-type Level = "h1" | "h2" | "h3";
+export type Level = "h1" | "h2" | "h3";
 
 type TitleProps = {
   children: ReactNode;

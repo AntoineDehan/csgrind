@@ -68,8 +68,18 @@ export const reportSchema = z.object({
 
 export type Report = z.infer<typeof reportSchema>;
 
+export const statDeltaSchema = z.object({
+  stat: z.string(),
+  previous: z.number(),
+  current: z.number(),
+  delta: z.number(),
+  improved: z.boolean(),
+});
+
 export const reportDetailSchema = reportSchema.extend({
   tips: z.array(z.object({ tip: tipSchema })),
+  comparison: z.array(statDeltaSchema),
+  index: z.number().int(),
 });
 
 export type ReportDetail = z.infer<typeof reportDetailSchema>;

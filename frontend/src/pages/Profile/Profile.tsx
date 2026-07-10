@@ -50,7 +50,7 @@ export default function Profile() {
             <div>
               <Title>{user?.name ?? "Player"}</Title>
               <Text color="secondary">
-                Member since {formatDate(nextGoalDate)}
+                Member since {formatDate(nextGoalDate)}.
               </Text>
             </div>
           </div>
