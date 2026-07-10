@@ -8,7 +8,7 @@ import { getUserId } from "../lib/getUserId";
 export async function getReports(req: Request, res: Response) {
   const userId = getUserId(req);
 
-  const reports = await reportRepo.findReportsByUser(userId);
+  const reports = await reportHandler.getVisibleReports(userId);
   res.json(reports);
 }
 

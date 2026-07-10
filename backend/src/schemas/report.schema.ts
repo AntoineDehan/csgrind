@@ -76,10 +76,19 @@ export const statDeltaSchema = z.object({
   improved: z.boolean(),
 });
 
+export const reportProgressSchema = z.object({
+  matchmaking: z.string(),
+  startElo: z.number().nullable(),
+  currentElo: z.number().nullable(),
+  objectiveElo: z.number(),
+  percent: z.number(),
+});
+
 export const reportDetailSchema = reportSchema.extend({
   tips: z.array(z.object({ tip: tipSchema })),
   comparison: z.array(statDeltaSchema),
   index: z.number().int(),
+  progress: reportProgressSchema.nullable(),
 });
 
 export type ReportDetail = z.infer<typeof reportDetailSchema>;
