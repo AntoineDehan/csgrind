@@ -41,6 +41,19 @@ export function findLatestReport(goalId: string) {
   });
 }
 
+export function findPreviousReport(goalId: string, before: Date) {
+  return prisma.report.findFirst({
+    where: { goalId, createdAt: { lt: before } },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export function countReportsUpTo(goalId: string, createdAt: Date) {
+  return prisma.report.count({
+    where: { goalId, createdAt: { lte: createdAt } },
+  });
+}
+
 export function createReport(data: CreateReportInput) {
   return prisma.report.create({
     data: data as Prisma.ReportUncheckedCreateInput,

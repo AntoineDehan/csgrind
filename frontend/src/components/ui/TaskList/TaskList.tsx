@@ -1,6 +1,6 @@
-import Title from "../Title/Title";
 import Text from "../Text/Text";
 import Loader from "../Loader/Loader";
+import Checkbox from "../Checkbox/Checkbox";
 import { useGoalTasks } from "../../../hooks/useGoals";
 import { useToggleReportTask } from "../../../hooks/useTasks";
 
@@ -25,47 +25,67 @@ export default function TaskList({ goalId }: TaskListProps) {
   const isEmpty = data.challenges.length === 0 && data.manual.length === 0;
 
   return (
-    <div className="rounded-lg border border-background-secondary-border bg-card p-8">
-      <Title level="h2">Tasks</Title>
-
-      {isEmpty && <Text color="secondary">No tasks yet.</Text>}
-
-      {data.challenges.length > 0 && (
-        <ul className="mt-4 flex flex-col gap-2">
-          {data.challenges.map((challenge) => (
-            <li key={challenge.taskId} className="flex items-baseline gap-2">
-              <Text span weight="medium">
-                {challenge.currentPct} / {challenge.targetPct}%
-              </Text>
-              <Text span color="secondary">
-                {challenge.content}
-              </Text>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {data.manual.length > 0 && (
-        <ul className="mt-6 flex flex-col gap-3">
-          {data.manual.map((task) => (
-            <li key={task.taskId}>
-              <label className="flex cursor-pointer items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={task.isCompleted}
-                  disabled={toggle.isPending}
-                  onChange={() =>
-                    toggle.mutate({
-                      reportId: task.reportId,
-                      taskId: task.taskId,
-                      isCompleted: !task.isCompleted,
-                    })
-                  }
-                />
-                <Text span color={task.isCompleted ? "secondary" : "primary"}>
-                  {task.content}
+    <div className="rounded-lg border border-background-secondary-border bg-card">
+      {isEmpty ? (
+        <div className="px-6 py-4">
+          <Text color="secondary">No tasks yet.</Text>
+        </div>
+      ) : (
+        <ul className="divide-y divide-background-secondary-border ">
+          {data.challenges.map((challenge) => {
+            const done = challenge.currentPct >= challenge.targetPct;
+            const fill =
+              challenge.targetPct > 0
+                ? Math.min(
+                    100,
+                    (challenge.currentPct / challenge.targetPct) * 100,
+                  )
+                : 0;
+            return (
+              <li
+                key={challenge.taskId}
+                className="flex items-center gap-4 px-6 py-4"
+              >
+                <Checkbox checked={done} disabled />
+                <div className="flex-1">
+                  <Text>{challenge.content}</Text>
+                  <div className="mt-2 h-0.5 w-full rounded-full bg-background-secondary-border">
+                    <div
+                      className="h-full rounded-full bg-brand"
+                      style={{ width: `${fill}%` }}
+                    />
+                  </div>
+                </div>
+                <Text mono weight="bold" color="brand">
+                  {challenge.currentPct} / {challenge.targetPct}%
                 </Text>
-              </label>
+              </li>
+            );
+          })}
+
+          {data.manual.map((task) => (
+            <li key={task.taskId} className="flex items-center gap-4 px-6 py-4">
+              <Checkbox
+                checked={task.isCompleted}
+                disabled={toggle.isPending}
+                onChange={(next) =>
+                  toggle.mutate({
+                    reportId: task.reportId,
+                    taskId: task.taskId,
+                    isCompleted: next,
+                  })
+                }
+              />
+              <Text
+                span
+                color={task.isCompleted ? "secondary" : "primary"}
+                className="flex-1"
+              >
+                {task.content}
+              </Text>
+              <Text size="small" color="secondary">
+                task
+              </Text>
             </li>
           ))}
         </ul>

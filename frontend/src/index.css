@@ -38,6 +38,18 @@
   --font-main: "Inter", sans-serif;
   --font-title: "Rajdhani", sans-serif;
   --font-mono: ui-monospace, Consolas, monospace;
+
+  --animate-glow-pulse: glow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 2px 0 currentColor;
+  }
+  50% {
+    box-shadow: 0 0 10px 2px currentColor;
+  }
 }
 
 @layer base {

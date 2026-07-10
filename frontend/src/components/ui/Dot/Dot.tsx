@@ -18,10 +18,10 @@ export default function Dot({ color, glow = DEFAULT_GLOW }: DotProps) {
 
   return (
     <span
-      className="inline-block size-2.5 rounded-full"
+      className={`inline-block size-2.5 rounded-full ${glow ? "animate-glow-pulse" : ""}`}
       style={{
         backgroundColor: value,
-        ...(glow ? { boxShadow: `0 0 8px ${value}` } : {}),
+        color: value,
       }}
     />
   );
