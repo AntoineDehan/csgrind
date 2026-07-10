@@ -11,6 +11,7 @@ type TextProps = {
   color?: Color;
   span?: boolean;
   mono?: boolean;
+  className?: string;
 };
 
 const DEFAULT_SIZE: Size = "normal";
@@ -26,17 +27,19 @@ export default function Text({
   color = DEFAULT_COLOR,
   span = DEFAULT_SPAN,
   mono = DEFAULT_MONO,
+  className,
 }: TextProps) {
   const Tag = span ? "span" : "p";
-  const className = [
+  const classes = [
     styles.text,
     styles["size--" + size],
     styles["weight--" + weight],
     styles["color--" + color],
     mono && styles.mono,
+    className,
   ]
     .filter(Boolean)
     .join(" ");
 
-  return <Tag className={className}>{children}</Tag>;
+  return <Tag className={classes}>{children}</Tag>;
 }
