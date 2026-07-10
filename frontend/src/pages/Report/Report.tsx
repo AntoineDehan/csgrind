@@ -7,6 +7,7 @@ import Button from "../../components/ui/Button/Button";
 import StatCompare from "../../components/ui/StatCompare/StatCompare";
 import StatCompareContainer from "../../components/ui/StatCompareContainer/StatCompareContainer";
 import { useReport } from "../../hooks/useReports";
+import { useUser } from "../../auth/useAuth";
 import type { Report as ReportType } from "../../services/reports";
 import AimStat from "./components/aimStat";
 import UtilityStat from "./components/utilityStat";
@@ -15,12 +16,12 @@ import Badge from "@/components/ui/Badge/Badge";
 import BadgeContainer from "@/components/ui/BadgeContainer/BadgeContainer";
 import TipsCollapse from "@/components/ui/TipsCollapse/TipsCollapse";
 import TaskList from "@/components/ui/TaskList/TaskList";
-import { useGoals, useGoalStats } from "@/hooks/useGoals";
 import { useBadges, useUserBadges } from "@/hooks/useBadges";
 import { formatDate } from "@/lib/date";
 import PosStat from "./components/posStat";
 import Dot from "@/components/ui/Dot/Dot";
 import Section from "@/components/ui/Section/Section";
+import leetifyLogo from "../../assets/Leetify.png";
 
 type StatField = {
   key: keyof ReportType;
@@ -141,13 +142,9 @@ export default function Report() {
   const { reportId } = useParams();
   const navigate = useNavigate();
   const { data: report, isLoading, error } = useReport(reportId);
-  const { data: goals, isLoading: goalsLoading } = useGoals();
-  const goal = goals?.find((g) => g.status === "in_progress");
-  const { data: stats } = useGoalStats(goal?.id);
+  const { data: user } = useUser();
   const { data: userBadges } = useUserBadges();
   const { data: allBadges } = useBadges();
-
-  const percent = stats?.percent ?? 0;
 
   if (isLoading) {
     return (
@@ -236,16 +233,37 @@ export default function Report() {
             <span className="colored-text">Keep Grinding.</span>
           </Title>
         </div>
+        <div className="flex justify-between items-end mb-2 mt-2">
+          <a href="https://leetify.com/">
+            <img
+              src={leetifyLogo}
+              alt="Powered by Leetify"
+              className="h-8 w-auto "
+            />
+          </a>
+          <a
+            href={
+              user?.steam64Id
+                ? `https://leetify.com/app/profile/${user.steam64Id}`
+                : "https://leetify.com/"
+            }
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Text size="small" color="leetify" className="underline">
+              View on Leetify
+            </Text>
+          </a>
+        </div>
 
-        {goal && (
+        {report.progress && (
           <GoalTracker
-            objective={goal.matchmaking}
-            startElo={stats?.startElo ?? null}
-            currentElo={stats?.currentElo ?? null}
-            objectiveElo={stats?.objectiveElo ?? goal.eloGoal}
-            percent={percent}
-            nextReportAt={stats?.nextReportAt}
-          ></GoalTracker>
+            objective={report.progress.matchmaking}
+            startElo={report.progress.startElo}
+            currentElo={report.progress.currentElo}
+            objectiveElo={report.progress.objectiveElo}
+            percent={report.progress.percent}
+          />
         )}
 
         <div className="flex justify-between">
