@@ -14,11 +14,13 @@ import GoalTracker from "@/components/ui/GoalTracker/GoalTracker";
 import Badge from "@/components/ui/Badge/Badge";
 import BadgeContainer from "@/components/ui/BadgeContainer/BadgeContainer";
 import TipsCollapse from "@/components/ui/TipsCollapse/TipsCollapse";
+import TaskList from "@/components/ui/TaskList/TaskList";
 import { useGoals, useGoalStats } from "@/hooks/useGoals";
 import { useBadges, useUserBadges } from "@/hooks/useBadges";
 import { formatDate } from "@/lib/date";
 import PosStat from "./components/posStat";
 import Dot from "@/components/ui/Dot/Dot";
+import Section from "@/components/ui/Section/Section";
 
 type StatField = {
   key: keyof ReportType;
@@ -370,11 +372,19 @@ export default function Report() {
             </PosStat>
           )}
           {posTips.length > 0 && (
-            <div className="mt-2 mb-5">
+            <div className="mt-2 mb-20">
               <TipsCollapse category="Positioning" tips={posTips} />
             </div>
           )}
         </div>
+
+        <Section
+          title="Your to-do list"
+          subtitle="Two long-term challenges, five short-term tasks. Can you do them all ? "
+        >
+          <TaskList goalId={report.goalId} />
+        </Section>
+        <div className="mt-20"></div>
       </div>
     </Container>
   );
