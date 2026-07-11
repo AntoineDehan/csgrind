@@ -7,7 +7,6 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import SetGoal from "./pages/SetGoal";
 import Profile from "./pages/Profile/Profile";
 import Tips from "./pages/Admin/Tips/Tips";
 import Tasks from "./pages/Admin/Tasks/Tasks";
@@ -25,7 +24,6 @@ export const router = createBrowserRouter([
         children: [
           { path: "dashboard", element: <Dashboard /> },
           { path: "profile", element: <Profile /> },
-          { path: "set-goal", element: <SetGoal /> },
           { path: "reports", element: <Reports /> },
           { path: "reports/:reportId", element: <ReportDetail /> },
           {
