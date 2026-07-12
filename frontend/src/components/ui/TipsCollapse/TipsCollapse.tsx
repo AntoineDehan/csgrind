@@ -16,10 +16,17 @@ type Tip = {
 type TipsCollapseProps = {
   category: string;
   tips: Tip[];
+  defaultOpen?: boolean;
 };
 
-export default function TipsCollapse({ category, tips }: TipsCollapseProps) {
-  const [open, setOpen] = useState(false);
+const DEFAULT_OPEN = false;
+
+export default function TipsCollapse({
+  category,
+  tips,
+  defaultOpen = DEFAULT_OPEN,
+}: TipsCollapseProps) {
+  const [open, setOpen] = useState(defaultOpen);
 
   return (
     <div className="rounded-lg border border-brand bg-background-secondary/40 p-4">
