@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Title from "../Title/Title";
 import Text from "../Text/Text";
+import EloChart, { type EloPoint } from "../EloChart/EloChart";
 import { Progress } from "@/components/ui/progress";
 import styles from "./goaltracker.module.css";
 
@@ -11,7 +12,11 @@ type GoalTrackerProps = {
   objectiveElo: number;
   percent: number;
   nextReportAt?: string;
+  detailed?: boolean;
+  history?: EloPoint[];
 };
+
+const DEFAULT_DETAILED = false;
 
 function formatNextReport(nextReportAt?: string): string {
   if (!nextReportAt) return "—";
@@ -29,9 +34,25 @@ export default function GoalTracker({
   objectiveElo,
   percent,
   nextReportAt,
+  detailed = DEFAULT_DETAILED,
+  history,
 }: GoalTrackerProps) {
   return (
     <div className={styles.tracker}>
+      {detailed && (
+        <div className="mb-4">
+          {history && history.length >= 2 ? (
+            <EloChart data={history} />
+          ) : (
+            <div className="flex h-35 items-center justify-center rounded-md border border-background-secondary-border">
+              <Text size="small" color="secondary">
+                Not enough data yet — come back after your next report.
+              </Text>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className={styles.header}>
         <Title level="h3">Current objective :</Title>
         <Title level="h3">{objective}</Title>
@@ -51,15 +72,17 @@ export default function GoalTracker({
           </Text>
         </div>
       </div>
-      <div className="bottom-details border-t border-background-secondary-border mt-3 mb-0 pt-2">
-        <Text size="small" color="secondary">
-          Next report in :
-          <span className="colored-text">
-            {" "}
-            {formatNextReport(nextReportAt)}
-          </span>
-        </Text>
-      </div>
+      {nextReportAt !== undefined && (
+        <div className="bottom-details border-t border-background-secondary-border mt-3 mb-0 pt-2">
+          <Text size="small" color="secondary">
+            Next report in :
+            <span className="colored-text">
+              {" "}
+              {formatNextReport(nextReportAt)}
+            </span>
+          </Text>
+        </div>
+      )}
     </div>
   );
 }

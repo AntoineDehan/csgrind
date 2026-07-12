@@ -3,6 +3,7 @@ import { fetchLeetifyProfile } from "../lib/leetify";
 import { mapProfileToReport } from "../mappers/report_mapper";
 import { findUserById } from "../repositories/user.repository";
 import * as reportRepo from "../repositories/report.repository";
+import * as goalRepo from "../repositories/goal.repository";
 import * as tipRepo from "../repositories/tip.repository";
 import * as taskRepo from "../repositories/task.repository";
 import * as goalHandler from "./goal.handler";
@@ -133,15 +134,64 @@ function challengeProgress(
   return Math.max(0, Math.min(100, Math.round(percent)));
 }
 
+export async function getVisibleReports(userId: string) {
+  const reports = await reportRepo.findReportsByUser(userId);
+
+  const baseline = new Map<string, { id: string; createdAt: Date }>();
+  for (const report of reports) {
+    const current = baseline.get(report.goalId);
+    if (!current || report.createdAt < current.createdAt) {
+      baseline.set(report.goalId, {
+        id: report.id,
+        createdAt: report.createdAt,
+      });
+    }
+  }
+  const baselineIds = new Set(
+    [...baseline.values()].map((entry) => entry.id),
+  );
+
+  return reports.filter((report) => !baselineIds.has(report.id));
+}
+
 export async function getReportDetail(reportId: string, userId: string) {
   const report = await reportRepo.findReportByIdForUser(reportId, userId);
   if (!report) return null;
 
-  const [previous, index] = await Promise.all([
+  const [previous, index, goal, earliest] = await Promise.all([
     reportRepo.findPreviousReport(report.goalId, report.createdAt),
     reportRepo.countReportsUpTo(report.goalId, report.createdAt),
+    goalRepo.findGoalByIdForUser(report.goalId, userId),
+    reportRepo.findEarliestReport(report.goalId),
   ]);
   const comparison = previous ? compareReports(previous, report) : [];
+  const progress = goal ? reportProgress(goal, earliest, report) : null;
 
-  return { ...report, comparison, index };
+  return { ...report, comparison, index, progress };
+}
+
+function reportProgress(
+  goal: { matchmaking: string; eloGoal: number },
+  earliest: Report | null,
+  report: Report,
+) {
+  const field = goal.matchmaking === "PREMIER" ? "premierRank" : "faceitRank";
+  const startElo = earliest?.[field] ?? null;
+  const currentElo = report[field] ?? null;
+  const objectiveElo = goal.eloGoal;
+
+  let percent = 0;
+  if (startElo != null && currentElo != null && objectiveElo > startElo) {
+    percent = Math.max(
+      0,
+      Math.min(
+        100,
+        Math.round(
+          ((currentElo - startElo) / (objectiveElo - startElo)) * 100,
+        ),
+      ),
+    );
+  }
+
+  return { matchmaking: goal.matchmaking, startElo, currentElo, objectiveElo, percent };
 }
