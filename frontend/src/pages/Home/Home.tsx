@@ -1,21 +1,37 @@
 import { useNavigate } from "react-router-dom";
-import Button from "../components/ui/Button/Button";
-import Title from "../components/ui/Title/Title";
-import Text from "../components/ui/Text/Text";
-import Section from "../components/ui/Section/Section";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
+import Button from "../../components/ui/Button/Button";
+import Title from "../../components/ui/Title/Title";
+import Text from "../../components/ui/Text/Text";
+import Section from "../../components/ui/Section/Section";
+import RotatingText from "../../components/ui/RotatingText/RotatingText";
+import ReportPreview from "./components/ReportPreview/ReportPreview";
+import HeroGoalDemo from "./components/HeroGoalDemo/HeroGoalDemo";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
+import { UserPlus, Target, LineChart } from "lucide-react";
+
+const STEPS = [
+  {
+    icon: UserPlus,
+    title: "Register",
+    body: "Create your account and link your Steam account — your CS2 stats sync in automatically, no manual input.",
+  },
+  {
+    icon: Target,
+    title: "Set your goal",
+    body: "Choose your target rank on Premier or Faceit, set a deadline, and pick how often you want your reports.",
+  },
+  {
+    icon: LineChart,
+    title: "Receive your report",
+    body: "On your schedule, get a report with your progress, personalized tips, and a to-do list of drills to fix your weak spots.",
+  },
+];
 
 export default function Home() {
   const navigate = useNavigate();
@@ -44,11 +60,19 @@ export default function Home() {
   ];
   return (
     <div className="flex justify-center flex-col items-center pl-70 pr-70 max-lg:px-40">
-      <section className="top-content flex justify-between w-full mt-10">
+      <section className="top-content flex justify-between w-full mt-10 mb-25">
         <div className="w-[40%]">
           <Title>
-            See your progress,
-            <span className="colored-text"> Fix your mistakes</span>
+            See your progress,{" "}
+            <RotatingText
+              phrases={[
+                "Fix your mistakes.",
+                "Climb the ranks.",
+                "Hit your goal.",
+                "Sharpen your aim.",
+                "Improve your game.",
+              ]}
+            />
           </Title>
           <div className="flex flex-col items-center">
             <Text>
@@ -73,76 +97,54 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div>Screen?</div>
+        <div className="w-1/2">
+          <HeroGoalDemo />
+        </div>
       </section>
-      <Section title="YOUR OWN REPORTS" className="main-content w-full h-104 mt-8">
-        <div>Bilan img</div>
+      <Section
+        title="YOUR OWN REPORTS"
+        subtitle="Know what's working, what's costing you rounds, and what to fix before you queue again."
+        className="main-content w-full mb-15"
+      >
+        <ReportPreview />
       </Section>
       <Section
         title="HOW TO START"
         subtitle="3 easy steps before starting your journey to the top"
-        className="middle-content w-full"
+        className="middle-content w-full mb-15"
       >
-        <div className="cards-container flex gap-3 mt-6 justify-between">
-          <Card className="aspect-square size-[320px] border-background-secondary-border">
-            <CardHeader>
-              <CardTitle>
-                <Text weight="medium" size="large">
-                  Register
-                </Text>
-              </CardTitle>
-              <CardDescription>First step is to register</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Text>
-                Create your account and link you Steam account, your CS2 stats
-                sync in automatically, no manual input.
-              </Text>
-            </CardContent>
-          </Card>
-          <Card className="aspect-square size-[320px] border-background-secondary-border">
-            <CardHeader>
-              <CardTitle>
-                <Text weight="medium" size="large">
-                  Set your Goal
-                </Text>
-              </CardTitle>
-              <CardDescription>
-                Set your elo goal and start to grind
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Text>
-                Choose your target rank on Premier or Faceit, set a deadline,
-                and pick how often you want your reports.
-              </Text>
-            </CardContent>
-          </Card>
-          <Card className="aspect-square size-[320px] border-background-secondary-border">
-            <CardHeader>
-              <CardTitle>
-                <Text weight="medium" size="large">
-                  Receive your Report
-                </Text>
-              </CardTitle>
-              <CardDescription>
-                Get a notification for your first report
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Text>
-                On your schedule, get a report with your progress, personalized
-                tips, and a to-do list of drills to fix your weak spots.
-              </Text>
-            </CardContent>
-          </Card>
+        <div className="cards-container mt-6 flex gap-4">
+          {STEPS.map((step, index) => {
+            const Icon = step.icon;
+            return (
+              <Card
+                key={step.title}
+                className="flex-1 transition hover:ring-brand/40"
+              >
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex size-11 items-center justify-center rounded-lg bg-brand/10 text-brand">
+                      <Icon className="size-6" strokeWidth={1.5} />
+                    </div>
+                    <Text span mono size="large" weight="bold" color="brand">
+                      {String(index + 1).padStart(2, "0")}
+                    </Text>
+                  </div>
+                  <CardTitle className="mt-3">{step.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Text color="secondary">{step.body}</Text>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </Section>
       <Section
         id="learn-more"
         title="MORE THAN SOME STATS"
         subtitle="The main goal of CSGRIND is to help you track your progress up until the completion of your goal"
-        className="bottom-content mt-8 w-full"
+        className="bottom-content w-full mb-15"
       >
         <Accordion
           multiple={false}
@@ -171,7 +173,7 @@ export default function Home() {
           ))}
         </Accordion>
       </Section>
-      <div className="bottom-cta mt-15 w-[50%] flex flex-col justify-center items-center mb-10">
+      <div className="bottom-cta mt-10 w-[50%] flex flex-col justify-center items-center mb-10">
         <Title level="h3">READY TO GRIND ?</Title>
         <Text size="small">Time to finally obtain your dream elo</Text>
         <div className="mt-5">
