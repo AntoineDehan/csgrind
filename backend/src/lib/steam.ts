@@ -1,3 +1,5 @@
+import { env } from "../config/env";
+
 const STEAM_URL = "https://steamcommunity.com/openid/login";
 
 export function getSteamRedirectUrl(returnTo: string, realm: string) {
@@ -48,10 +50,10 @@ export type SteamPlayerSummary = {
 export async function fetchSteamPlayerSummary(
   steam64Id: string,
 ): Promise<SteamPlayerSummary | null> {
-  const key = process.env.STEAM_API_KEY;
-  if (!key) throw new Error("STEAM_API_KEY is not configured");
-
-  const params = new URLSearchParams({ key, steamids: steam64Id });
+  const params = new URLSearchParams({
+    key: env.STEAM_API_KEY,
+    steamids: steam64Id,
+  });
   const res = await fetch(`${STEAM_SUMMARY_URL}?${params.toString()}`);
 
   if (!res.ok) throw new Error(`Steam summary request failed: ${res.status}`);

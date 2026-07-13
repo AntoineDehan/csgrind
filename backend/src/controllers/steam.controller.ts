@@ -6,7 +6,8 @@ import {
   fetchSteamPlayerSummary,
 } from "../lib/steam";
 import { signTokenSteam, verifyToken } from "../lib/jwt";
-import { AppError, UnauthorizedError } from "../errors/AppError";
+import { UnauthorizedError } from "../errors/AppError";
+import { env } from "../config/env";
 
 export function startSteamLink(req: Request, res: Response) {
   const userId = req.userId;
@@ -14,19 +15,13 @@ export function startSteamLink(req: Request, res: Response) {
     throw new UnauthorizedError();
   }
 
-  const realm = process.env.STEAM_REALM;
-  const returnUrl = process.env.STEAM_RETURN_URL;
-  if (!realm || !returnUrl) {
-    throw new AppError("Steam config missing", 500);
-  }
-
   const state = signTokenSteam(userId);
-  const returnTo = `${returnUrl}?state=${state}`;
-  res.json({ url: getSteamRedirectUrl(returnTo, realm) });
+  const returnTo = `${env.STEAM_RETURN_URL}?state=${state}`;
+  res.json({ url: getSteamRedirectUrl(returnTo, env.STEAM_REALM) });
 }
 
 export async function steamReturn(req: Request, res: Response) {
-  const front = process.env.SITE_URL ?? "http://localhost:5173";
+  const front = env.SITE_URL;
   const state = req.query.state;
 
   try {

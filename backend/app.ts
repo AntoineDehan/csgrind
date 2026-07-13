@@ -1,3 +1,4 @@
+import { env } from "./src/config/env";
 import express from "express";
 import cors from "cors";
 import cron from "node-cron";
@@ -12,9 +13,9 @@ import goalRouter from "./src/routes/goal";
 import reportRouter from "./src/routes/report";
 
 const app = express();
-const port = 3000;
+const port = env.PORT;
 
-app.use(cors({ origin: process.env.SITE_URL ?? "http://localhost:5173" }));
+app.use(cors({ origin: env.SITE_URL }));
 app.use(express.json());
 
 app.get("/", (req, res) => {
