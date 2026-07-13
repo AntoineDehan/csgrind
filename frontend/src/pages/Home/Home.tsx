@@ -59,7 +59,7 @@ export default function Home() {
     },
   ];
   return (
-    <div className="flex justify-center flex-col items-center pl-70 pr-70 max-lg:px-40">
+    <div className="flex justify-center flex-col items-center pl-85 pr-85 max-lg:px-40">
       <section className="top-content flex justify-between w-full mt-10 mb-25">
         <div className="w-[40%]">
           <Title>
@@ -70,7 +70,7 @@ export default function Home() {
                 "Climb the ranks.",
                 "Hit your goal.",
                 "Sharpen your aim.",
-                "Improve your game.",
+                "Improve the game.",
               ]}
             />
           </Title>

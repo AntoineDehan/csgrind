@@ -32,7 +32,7 @@ export default function Login() {
     validators: { onChange: loginUserSchema },
     onSubmit: async ({ value }) => {
       await mutation.mutateAsync(value);
-      navigate("/dashboard");
+      navigate("/steam-link");
     },
   });
 
