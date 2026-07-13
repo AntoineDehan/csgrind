@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { Link, Navigate } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { useUser } from "../auth/useAuth";
-import { startSteamLink } from "../services/steam";
 import { useGoals, useGoalStats } from "../hooks/useGoals";
 import { useReports, useReport } from "../hooks/useReports";
 import Container from "../components/ui/Container/Container";
@@ -32,13 +30,6 @@ export default function Dashboard() {
   const { data: reports } = useReports();
   const [goalModalOpen, setGoalModalOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
-
-  const steamMutation = useMutation({
-    mutationFn: startSteamLink,
-    onSuccess: ({ url }) => {
-      window.location.href = url;
-    },
-  });
 
   const recentReports = reports
     ? [...reports]
@@ -94,6 +85,10 @@ export default function Dashboard() {
     );
   };
 
+  if (user && !user.steam64Id) {
+    return <Navigate to="/steam-link" replace />;
+  }
+
   return (
     <Container>
       <div className="flex flex-col gap-8 py-10">
@@ -130,25 +125,7 @@ export default function Dashboard() {
           </div>
         )}
 
-        {!user?.steam64Id ? (
-          <div className="rounded-lg border border-background-secondary-border bg-card p-8">
-            <Title level="h2">Link your Steam account</Title>
-            <div className="mt-2">
-              <Text color="secondary">
-                Connect Steam to start tracking your CS2 progress.
-              </Text>
-            </div>
-            <div className="mt-4">
-              <Button
-                variant="cta"
-                onClick={() => steamMutation.mutate()}
-                disabled={steamMutation.isPending}
-              >
-                Link Steam
-              </Button>
-            </div>
-          </div>
-        ) : !activeGoal ? (
+        {!activeGoal ? (
           <div className="rounded-lg border border-background-secondary-border bg-card p-8">
             <Title level="h2">Set your first goal</Title>
             <div className="mt-2">
