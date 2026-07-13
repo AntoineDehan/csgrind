@@ -32,7 +32,7 @@ export default function Register() {
     validators: { onChange: registerUserSchema },
     onSubmit: async ({ value }) => {
       await mutation.mutateAsync(value);
-      navigate("/dashboard");
+      navigate("/steam-link");
     },
   });
 
