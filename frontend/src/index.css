@@ -11,6 +11,8 @@
   --color-foreground: #fbfaf6;
   --color-card: var(--color-background-secondary);
   --color-card-foreground: #fbfaf6;
+  --color-popover: var(--color-background-secondary);
+  --color-popover-foreground: var(--color-text-primary);
 
   --color-muted: #f4f4f5;
   --color-muted-foreground: #6b6375;
