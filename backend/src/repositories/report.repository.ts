@@ -12,6 +12,10 @@ export function findReportsByUser(userId: string) {
   return prisma.report.findMany({ where: { goal: { userId } } });
 }
 
+export function deleteReportsByUser(userId: string) {
+  return prisma.report.deleteMany({ where: { goal: { userId } } });
+}
+
 export function findReportByIdForUser(id: string, userId: string) {
   return prisma.report.findFirst({
     where: { id, goal: { userId } },

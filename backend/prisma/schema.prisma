@@ -133,7 +133,7 @@ model ReportTip {
   reportId String @map("report_id")
   tipId    String @map("tip_id")
 
-  report Report @relation(fields: [reportId], references: [id])
+  report Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
   tip    Tip    @relation(fields: [tipId], references: [id])
 
   @@id([reportId, tipId])
@@ -159,7 +159,7 @@ model ReportTask {
   trackCurrent Decimal? @map("track_current") @db.Decimal(10, 4)
   trackTarget  Decimal? @map("track_target") @db.Decimal(10, 4)
 
-  report Report @relation(fields: [reportId], references: [id])
+  report Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
   task   Task   @relation(fields: [taskId], references: [id])
 
   @@id([reportId, taskId])

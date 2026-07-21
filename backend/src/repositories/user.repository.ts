@@ -6,6 +6,13 @@ export function findAllUsers() {
   return prisma.user.findMany();
 }
 
+export function findUsersWithSteam() {
+  return prisma.user.findMany({
+    where: { steam64Id: { not: null } },
+    select: { id: true, steam64Id: true },
+  });
+}
+
 export function findUserById(id: string) {
   return prisma.user.findUnique({ where: { id } });
 }

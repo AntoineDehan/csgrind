@@ -4,6 +4,7 @@ import cors from "cors";
 import helmet from "helmet";
 import cron from "node-cron";
 import { runReportScheduler } from "./src/jobs/reportScheduler";
+import { runLeetifyAccountCheck } from "./src/jobs/leetifyAccountCheck";
 import { errorHandler } from "./src/middlewares/error.middleware";
 import userRouter from "./src/routes/user";
 import authRouter from "./src/routes/auth";
@@ -39,6 +40,16 @@ app.use("/goals", goalRouter);
 app.use("/reports", reportRouter);
 
 app.use(errorHandler);
+
+cron.schedule(
+  "0 07 * * *",
+  () => {
+    runLeetifyAccountCheck().catch((err) => {
+      console.error("Leetify account check crashed:", err);
+    });
+  },
+  { timezone: "Europe/Paris" },
+);
 
 cron.schedule(
   "0 13 * * *",
