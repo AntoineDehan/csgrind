@@ -1,6 +1,7 @@
 import { env } from "./src/config/env";
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
 import cron from "node-cron";
 import { runReportScheduler } from "./src/jobs/reportScheduler";
 import { errorHandler } from "./src/middlewares/error.middleware";
@@ -15,6 +16,7 @@ import reportRouter from "./src/routes/report";
 const app = express();
 const port = env.PORT;
 
+app.use(helmet());
 app.use(cors({ origin: env.SITE_URL }));
 app.use(express.json());
 
