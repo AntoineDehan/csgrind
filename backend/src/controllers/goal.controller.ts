@@ -6,6 +6,7 @@ import * as userRepo from "../repositories/user.repository";
 import { createGoalSchema, updateGoalSchema } from "../schemas/goal.schema";
 import { BadRequestError, NotFoundError } from "../errors/AppError";
 import { getUserId } from "../lib/getUserId";
+import { checkLeetifyProfileExists } from "../lib/leetify";
 
 export async function getGoals(req: Request, res: Response) {
   const userId = getUserId(req);
@@ -36,6 +37,13 @@ export async function postGoal(req: Request, res: Response) {
   const user = await userRepo.findUserById(userId);
   if (!user?.steam64Id) {
     throw new BadRequestError("Link your Steam account before creating a goal");
+  }
+
+  const leetifyStatus = await checkLeetifyProfileExists(user.steam64Id);
+  if (leetifyStatus === "gone") {
+    throw new BadRequestError(
+      "No Leetify profile found for this Steam account. Create one on leetify.com, then try again.",
+    );
   }
 
   const goal = await goalRepo.createGoal(data, userId);
