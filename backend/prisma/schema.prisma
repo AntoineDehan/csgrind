@@ -62,7 +62,7 @@ model Goal {
   reportFrequency ReportFrequency @default(DAYS_5) @map("report_frequency")
 
   userId  String @map("user_id")
-  user    User   @relation(fields: [userId], references: [id])
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   reports Report[]
 
@@ -110,7 +110,7 @@ model Report {
 
   // Relations
   goalId String @map("goal_id")
-  goal   Goal   @relation(fields: [goalId], references: [id])
+  goal   Goal   @relation(fields: [goalId], references: [id], onDelete: Cascade)
 
   tips      ReportTip[]
   tasks     ReportTask[]
@@ -183,7 +183,7 @@ model UserBadge {
   userId  String @map("user_id")
   badgeId String @map("badge_id")
 
-  user  User  @relation(fields: [userId], references: [id])
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   badge Badge @relation(fields: [badgeId], references: [id])
 
   @@unique([userId, badgeId])
