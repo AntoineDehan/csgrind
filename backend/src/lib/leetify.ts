@@ -188,6 +188,23 @@ export async function fetchLeetifyProfile(
   return (await res.json()) as LeetifyProfile;
 }
 
+export type LeetifyProfileStatus = "exists" | "gone" | "unknown";
+
+export async function checkLeetifyProfileExists(
+  steam64Id: string,
+): Promise<LeetifyProfileStatus> {
+  try {
+    const res = await fetch(
+      `https://api-public.cs-prod.leetify.com/v3/profile?steam64_id=${steam64Id}`,
+    );
+    if (res.ok) return "exists";
+    if (res.status === 404) return "gone";
+    return "unknown";
+  } catch {
+    return "unknown";
+  }
+}
+
 export async function fetchLeetifyMatches(
   steam64Id: string,
 ): Promise<LeetifyMatch[]> {

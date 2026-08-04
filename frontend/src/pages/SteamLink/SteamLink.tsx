@@ -12,7 +12,6 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-  CardContent,
 } from "@/components/ui/card";
 
 export default function SteamLink() {
@@ -50,28 +49,28 @@ export default function SteamLink() {
         <CardHeader>
           <CardTitle>Link your Steam account</CardTitle>
           <CardDescription>
-            One last step — connect Steam so we can pull your CS2 stats and turn
-            them into your reports.
+            Connect Steam so we can pull your CS2 stats from Leetify.com
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          {steamMutation.error && (
-            <Alert variant="error">{steamMutation.error.message}</Alert>
-          )}
-          <button
-            type="button"
-            onClick={() => steamMutation.mutate()}
-            disabled={steamMutation.isPending}
-            className="w-fit cursor-pointer transition-opacity hover:opacity-90 disabled:cursor-default disabled:opacity-60"
-          >
-            <img
-              src={steamButton}
-              alt="Sign in through Steam"
-              className="h-auto w-45"
-            />
-          </button>
-        </CardContent>
       </Card>
+
+      <div className="flex flex-col items-center gap-3">
+        {steamMutation.error && (
+          <Alert variant="error">{steamMutation.error.message}</Alert>
+        )}
+        <button
+          type="button"
+          onClick={() => steamMutation.mutate()}
+          disabled={steamMutation.isPending}
+          className="cursor-pointer p-0 transition-opacity hover:opacity-90 disabled:cursor-default disabled:opacity-60"
+        >
+          <img
+            src={steamButton}
+            alt="Sign in through Steam"
+            className="h-auto w-27"
+          />
+        </button>
+      </div>
     </div>
   );
 }

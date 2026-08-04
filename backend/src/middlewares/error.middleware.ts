@@ -28,6 +28,10 @@ export function errorHandler(
       res.status(404).json({ message: "Resource not found" });
       return;
     }
+    if (err.code === "P2003") {
+      res.status(409).json({ message: "Operation failed due to related records" });
+      return;
+    }
   }
 
   console.error(err);

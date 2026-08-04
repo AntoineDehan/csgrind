@@ -1,8 +1,10 @@
 import { env } from "./src/config/env";
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
 import cron from "node-cron";
 import { runReportScheduler } from "./src/jobs/reportScheduler";
+import { runLeetifyAccountCheck } from "./src/jobs/leetifyAccountCheck";
 import { errorHandler } from "./src/middlewares/error.middleware";
 import userRouter from "./src/routes/user";
 import authRouter from "./src/routes/auth";
@@ -15,6 +17,7 @@ import reportRouter from "./src/routes/report";
 const app = express();
 const port = env.PORT;
 
+app.use(helmet());
 app.use(cors({ origin: env.SITE_URL }));
 app.use(express.json());
 
@@ -37,6 +40,16 @@ app.use("/goals", goalRouter);
 app.use("/reports", reportRouter);
 
 app.use(errorHandler);
+
+cron.schedule(
+  "0 07 * * *",
+  () => {
+    runLeetifyAccountCheck().catch((err) => {
+      console.error("Leetify account check crashed:", err);
+    });
+  },
+  { timezone: "Europe/Paris" },
+);
 
 cron.schedule(
   "0 13 * * *",
