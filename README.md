@@ -155,7 +155,7 @@ Cross-cutting modules:
 | Time (Europe/Paris) | Job                                                                            |
 | ------------------- | ------------------------------------------------------------------------------ |
 | 07:00               | Leetify account check — deletes reports when the source account is gone (GDPR) |
-| 13:00               | Generates the reports due according to each goal's frequency                   |
+| 13:00               | Generates the reports due according to each goal's frequency, then emails a notification linking to each new report |
 
 ---
 
