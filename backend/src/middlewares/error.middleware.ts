@@ -1,0 +1,39 @@
+import type { NextFunction, Request, Response } from "express";
+import { ZodError } from "zod";
+import { Prisma } from "../../generated/prisma/client";
+import { AppError } from "../errors/AppError";
+
+export function errorHandler(
+  err: unknown,
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  if (err instanceof AppError) {
+    res.status(err.statusCode).json({ message: err.message });
+    return;
+  }
+
+  if (err instanceof ZodError) {
+    res.status(400).json({ message: "Validation failed", errors: err.issues });
+    return;
+  }
+
+  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    if (err.code === "P2002") {
+      res.status(409).json({ message: "Resource already exists" });
+      return;
+    }
+    if (err.code === "P2025") {
+      res.status(404).json({ message: "Resource not found" });
+      return;
+    }
+    if (err.code === "P2003") {
+      res.status(409).json({ message: "Operation failed due to related records" });
+      return;
+    }
+  }
+
+  console.error(err);
+  res.status(500).json({ message: "Server error" });
+}

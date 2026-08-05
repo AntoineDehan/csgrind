@@ -1,0 +1,25 @@
+.logo {
+  display: block;
+  width: auto;
+  aspect-ratio: 365 / 87;
+}
+
+.logo--small {
+  height: 1.5rem;
+}
+
+.logo--normal {
+  height: 2.5rem;
+}
+
+.logo--large {
+  height: 4rem;
+}
+
+.logo--black {
+  color: #000000;
+}
+
+.logo--white {
+  color: var(--color-brand-foreground);
+}

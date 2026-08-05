@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #53ca65;
+  --color-brand-foreground: #f4f4f5;
+  --color-leetify: #f84982;
+
+  --color-background: #131419;
+  --color-background-secondary: #1b1d24;
+  --color-background-secondary-border: #33353d;
+  --color-foreground: #fbfaf6;
+  --color-card: var(--color-background-secondary);
+  --color-card-foreground: #fbfaf6;
+  --color-popover: var(--color-background-secondary);
+  --color-popover-foreground: var(--color-text-primary);
+
+  --color-muted: #f4f4f5;
+  --color-muted-foreground: #6b6375;
+
+  --color-border: #e5e4e7;
+  --color-input: #e5e4e7;
+  --color-ring: #53ca65;
+
+  --color-primary: #08060d;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f4f4f5;
+  --color-secondary-foreground: #08060d;
+
+  --color-text-primary: #fbfaf6;
+  --color-text-secondary: #d8d4cb;
+
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-success: #53ca65;
+  --color-warning: #f59e0b;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+
+  --font-main: "Inter", sans-serif;
+  --font-title: "Rajdhani", sans-serif;
+  --font-mono: ui-monospace, Consolas, monospace;
+
+  --animate-glow-pulse: glow-pulse 3s ease-in-out infinite;
+  --animate-text-swap: text-swap 0.6s ease;
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 2px 0 currentColor;
+  }
+  50% {
+    box-shadow: 0 0 10px 2px currentColor;
+  }
+}
+
+@keyframes text-swap {
+  from {
+    opacity: 0;
+    transform: translateY(0.4em);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100svh;
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: var(--font-main);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: var(--font-title);
+      font-weight: 600;
+    }
+  }
+
+  .colored-text {
+    color: var(--color-brand);
+  }
+}

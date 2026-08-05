@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    // Environment Settings
+    // See also https://aka.ms/tsconfig/module
+    "module": "esnext",
+    "target": "es2023",
+    "types": ["node"],
+
+    // Other Outputs
+    // declaration/declarationMap servent à PUBLIER une lib (.d.ts).
+    // Ici c'est une app lancée par tsx -> inutile, et ça fait échouer
+    // le type-check sur le client Prisma généré. On garde juste sourceMap.
+    "sourceMap": true,
+
+    // Stricter Typechecking Options
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    "strict": true,
+    "jsx": "react-jsx",
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "ignoreDeprecations": "6.0"
+  },
+  // On ne type-check pas le code généré ni les dépendances.
+  "exclude": ["node_modules", "generated"]
+}
