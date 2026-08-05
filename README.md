@@ -172,7 +172,13 @@ The `master` branch is protected: pull requests are mandatory and status checks 
 
 ## Deployment
 
-> TODO: see [`docs/deploiement.md`](docs/deploiement.md)
+Production runs the same images behind [Caddy](https://caddyserver.com) (automatic HTTPS) on a single VPS:
+
+```bash
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
+Full step-by-step procedure: [`docs/deploiement.md`](docs/deploiement.md).
 
 ## Credits
 
