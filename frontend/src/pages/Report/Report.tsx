@@ -182,7 +182,7 @@ export default function Report() {
           />
         )}
 
-        <div className="flex justify-between">
+        <div className="flex justify-between max-md:flex-col">
           {newBadges.length > 0 && (
             <section className="mt-8">
               <Title level="h2">Badges unlocked</Title>
@@ -205,7 +205,7 @@ export default function Report() {
 
           {highlights.length > 0 && (
             <section className="mt-8">
-              <div className="flex justify-end">
+              <div className="flex justify-end max-md:justify-start">
                 <Title level="h2">Highlights</Title>
               </div>
               <div className="mt-4">
@@ -318,7 +318,7 @@ export default function Report() {
         >
           <TaskList goalId={report.goalId} />
         </Section>
-        <div className="mt-20"></div>
+        <div className="mt-20 max-md:mt-10"></div>
       </div>
     </Container>
   );

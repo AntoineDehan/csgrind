@@ -9,12 +9,22 @@ export default function Layout() {
 
   const aside: NavItem[] = user
     ? [
-        { to: "/dashboard", label: "Dashboard" },
-        { to: "/reports", label: "Report" },
+        { to: "/dashboard", label: "Dashboard", mobileHidden: true },
+        { to: "/reports", label: "Report", mobileHidden: true },
         {
           to: "/profile",
           avatar: user.image,
           menu: [
+            {
+              label: "Dashboard",
+              onSelect: () => navigate("/dashboard"),
+              mobileOnly: true,
+            },
+            {
+              label: "Report",
+              onSelect: () => navigate("/reports"),
+              mobileOnly: true,
+            },
             { label: "Profile", onSelect: () => navigate("/profile") },
             {
               label: "Disconnect",

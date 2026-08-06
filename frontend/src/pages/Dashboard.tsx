@@ -111,7 +111,7 @@ export default function Dashboard() {
           </div>
         </div>
         {(leftStats.length > 0 || rightStats.length > 0) && (
-          <div className="flex justify-between gap-8">
+          <div className="flex justify-between gap-8 max-md:flex-col max-md:gap-4">
             {leftStats.length > 0 && (
               <StatCompareContainer>
                 {leftStats.map(renderStat)}

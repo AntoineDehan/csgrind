@@ -37,11 +37,11 @@ export default function Register() {
   });
 
   return (
-    <div className="flex flex-col items-center gap-8 py-20">
+    <div className="flex flex-col items-center gap-8 py-20 max-md:px-4 max-md:py-12">
       <Link to="/">
         <Logo variant="white" size="large" />
       </Link>
-      <Card className="w-100 border-background-secondary-border">
+      <Card className="w-100 max-md:w-full border-background-secondary-border">
         <CardHeader>
           <CardTitle>Create account</CardTitle>
           <CardDescription>
