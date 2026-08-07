@@ -61,7 +61,7 @@ export default function Reports() {
               const active = goal.status === "in_progress";
               return (
                 <section key={goal.id}>
-                  <div className="mb-3 flex items-center gap-3">
+                  <div className="mb-3 flex items-center gap-3 max-md:flex-wrap">
                     <Dot color={active ? "brand" : "secondary"} glow={active} />
                     <Text
                       span

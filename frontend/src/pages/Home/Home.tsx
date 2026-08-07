@@ -59,9 +59,9 @@ export default function Home() {
     },
   ];
   return (
-    <div className="flex justify-center flex-col items-center pl-85 pr-85 max-lg:px-40">
-      <section className="top-content flex justify-between w-full mt-10 mb-25">
-        <div className="w-[40%]">
+    <div className="flex justify-center flex-col items-center pl-85 pr-85 max-lg:px-40 max-md:px-4">
+      <section className="top-content flex justify-between w-full mt-10 mb-25 max-md:flex-col max-md:gap-10 max-md:mb-12">
+        <div className="w-[40%] max-md:w-full">
           <Title>
             See your progress,{" "}
             <RotatingText
@@ -97,7 +97,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="w-1/2">
+        <div className="w-1/2 max-md:w-full">
           <HeroGoalDemo />
         </div>
       </section>
@@ -113,7 +113,7 @@ export default function Home() {
         subtitle="3 easy steps before starting your journey to the top"
         className="middle-content w-full mb-15"
       >
-        <div className="cards-container mt-6 flex gap-4">
+        <div className="cards-container mt-6 flex gap-4 max-md:flex-col">
           {STEPS.map((step, index) => {
             const Icon = step.icon;
             return (
@@ -173,7 +173,7 @@ export default function Home() {
           ))}
         </Accordion>
       </Section>
-      <div className="bottom-cta mt-10 w-[50%] flex flex-col justify-center items-center mb-10">
+      <div className="bottom-cta mt-10 w-[50%] max-md:w-full flex flex-col justify-center items-center mb-10">
         <Title level="h3">READY TO GRIND ?</Title>
         <Text size="small">Time to finally obtain your dream elo</Text>
         <div className="mt-5">

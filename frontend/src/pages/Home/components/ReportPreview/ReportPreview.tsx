@@ -94,7 +94,7 @@ export default function ReportPreview() {
         </div>
       </div>
 
-      <div className="flex divide-x divide-background-secondary-border overflow-x-auto border-t border-background-secondary-border">
+      <div className="flex divide-x divide-background-secondary-border overflow-x-auto border-t border-background-secondary-border max-md:grid max-md:grid-cols-2 max-md:divide-x-0 max-md:gap-px max-md:bg-background-secondary-border">
         {SAMPLE_STATS.map((stat) => (
           <div key={stat.label} className="flex-1">
             <StatCompare
