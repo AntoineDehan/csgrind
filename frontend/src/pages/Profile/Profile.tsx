@@ -36,8 +36,8 @@ export default function Profile() {
   return (
     <Container>
       <div className="flex flex-col gap-6 pt-10">
-        <div className="profile-details flex justify-between items-end mb-6">
-          <div className="flex gap-3 items-center">
+        <div className="profile-details flex justify-between items-end mb-6 max-md:flex-col max-md:items-center max-md:gap-2">
+          <div className="flex gap-3 items-center max-md:flex-col max-md:text-center">
             {user?.image ? (
               <img
                 src={user.image}

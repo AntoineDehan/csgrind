@@ -14,6 +14,7 @@ export type NavMenuItem = {
   label: string;
   onSelect: () => void;
   variant?: "default" | "destructive";
+  mobileOnly?: boolean;
 };
 
 export type NavItem = {
@@ -22,6 +23,7 @@ export type NavItem = {
   cta?: boolean;
   avatar?: string | null;
   menu?: NavMenuItem[];
+  mobileHidden?: boolean;
 };
 
 type NavbarProps = {
@@ -62,7 +64,7 @@ export default function Navbar({ logo = true, aside = [] }: NavbarProps) {
                         key={menuItem.label}
                         variant={menuItem.variant}
                         onClick={menuItem.onSelect}
-                        className="cursor-pointer"
+                        className={`cursor-pointer${menuItem.mobileOnly ? " md:hidden" : ""}`}
                       >
                         {menuItem.label}
                       </DropdownMenuItem>
@@ -93,7 +95,11 @@ export default function Navbar({ logo = true, aside = [] }: NavbarProps) {
               {item.label}
             </Button>
           ) : (
-            <Link key={item.to} to={item.to} className={styles.link}>
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`${styles.link}${item.mobileHidden ? " max-md:hidden" : ""}`}
+            >
               {item.label}
             </Link>
           );
