@@ -59,7 +59,7 @@ export default function Home() {
     },
   ];
   return (
-    <div className="flex justify-center flex-col items-center pl-85 pr-85 max-lg:px-40 max-md:px-4">
+    <div className="flex justify-center flex-col items-center pl-85 pr-85 max-2xl:max-w-190 max-2xl:mx-auto max-2xl:px-6 max-md:px-4">
       <section className="top-content flex justify-between w-full mt-10 mb-25 max-md:flex-col max-md:gap-10 max-md:mb-12">
         <div className="w-[40%] max-md:w-full">
           <Title>
