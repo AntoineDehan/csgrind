@@ -144,6 +144,12 @@ export default function Register() {
             <Button type="submit" variant="cta" disabled={mutation.isPending}>
               {mutation.isPending ? "Creating account…" : "Register"}
             </Button>
+
+            <Text size="xsmall" color="secondary">
+              By creating an account you agree to our{" "}
+              <Link to="/terms">terms of use</Link> and{" "}
+              <Link to="/privacy">privacy policy</Link>.
+            </Text>
           </form>
         </CardContent>
         <CardFooter>
