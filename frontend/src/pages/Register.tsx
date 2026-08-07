@@ -1,5 +1,5 @@
+import { useState } from "react";
 import { useForm } from "@tanstack/react-form";
-import { useNavigate } from "react-router-dom";
 import { registerUserSchema } from "@backend/schemas/auth.schema";
 import { useRegister } from "../auth/useAuth";
 import Link from "../components/ui/Link/Link";
@@ -24,7 +24,7 @@ function fieldError(errors: unknown[]): string {
 }
 
 export default function Register() {
-  const navigate = useNavigate();
+  const [sentTo, setSentTo] = useState<string | null>(null);
   const mutation = useRegister();
 
   const form = useForm({
@@ -32,9 +32,38 @@ export default function Register() {
     validators: { onChange: registerUserSchema },
     onSubmit: async ({ value }) => {
       await mutation.mutateAsync(value);
-      navigate("/steam-link");
+      setSentTo(value.email);
     },
   });
+
+  if (sentTo) {
+    return (
+      <div className="flex flex-col items-center gap-8 py-20 max-md:px-4 max-md:py-12">
+        <Link to="/">
+          <Logo variant="white" size="large" />
+        </Link>
+        <Card className="w-100 max-md:w-full border-background-secondary-border">
+          <CardHeader>
+            <CardTitle>Check your inbox</CardTitle>
+            <CardDescription>
+              We sent a confirmation link to {sentTo}.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Text size="small">
+              Click the link to activate your account. It expires in 24 hours.
+              If nothing arrives within a few minutes, check your spam folder.
+            </Text>
+          </CardContent>
+          <CardFooter>
+            <Text size="small">
+              Already confirmed? <Link to="/login">Log in</Link>
+            </Text>
+          </CardFooter>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center gap-8 py-20 max-md:px-4 max-md:py-12">

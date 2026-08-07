@@ -7,6 +7,7 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import SteamLink from "./pages/SteamLink/SteamLink";
+import VerifyEmail from "./pages/VerifyEmail";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile/Profile";
 import Tips from "./pages/Admin/Tips/Tips";
@@ -42,4 +43,5 @@ export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
   { path: "/steam-link", element: <SteamLink /> },
+  { path: "/verify-email", element: <VerifyEmail /> },
 ]);

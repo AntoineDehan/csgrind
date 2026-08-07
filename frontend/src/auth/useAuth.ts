@@ -1,5 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { login, register, getMe, type Credentials } from "../services/auth";
+import {
+  login,
+  register,
+  getMe,
+  verifyEmail,
+  resendVerification,
+  type Credentials,
+} from "../services/auth";
 import { getToken, setToken, clearToken } from "../lib/token";
 
 export function useUser() {
@@ -23,20 +30,20 @@ export function useLogin() {
 }
 
 export function useRegister() {
-  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (credentials: Credentials) => {
-      await register(credentials);
-      try {
-        return await login(credentials);
-      } catch {
-        throw new Error("Account created. Please sign in.");
-      }
-    },
-    onSuccess: ({ token }) => {
-      setToken(token);
-      queryClient.invalidateQueries({ queryKey: ["me"] });
-    },
+    mutationFn: (credentials: Credentials) => register(credentials),
+  });
+}
+
+export function useVerifyEmail() {
+  return useMutation({
+    mutationFn: (token: string) => verifyEmail(token),
+  });
+}
+
+export function useResendVerification() {
+  return useMutation({
+    mutationFn: (email: string) => resendVerification(email),
   });
 }
 
