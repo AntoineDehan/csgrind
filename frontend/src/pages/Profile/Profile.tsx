@@ -7,6 +7,7 @@ import GoalTracker from "../../components/ui/GoalTracker/GoalTracker";
 import BadgeContainer from "../../components/ui/BadgeContainer/BadgeContainer";
 import Badge from "../../components/ui/Badge/Badge";
 import ProfileContainer from "./components/ProfileContainer/ProfileContainer";
+import DeleteAccount from "./components/DeleteAccount/DeleteAccount";
 import { useGoals, useGoalStats } from "../../hooks/useGoals";
 import { useBadges, useUserBadges } from "../../hooks/useBadges";
 import { useUser } from "../../auth/useAuth";
@@ -87,6 +88,8 @@ export default function Profile() {
               ))}
             </BadgeContainer>
           </Section>
+
+          {user && <DeleteAccount userId={user.id} />}
         </div>
       </div>
     </Container>

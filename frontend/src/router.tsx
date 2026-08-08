@@ -10,6 +10,9 @@ import SteamLink from "./pages/SteamLink/SteamLink";
 import VerifyEmail from "./pages/VerifyEmail";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile/Profile";
+import LegalNotice from "./pages/Legal/LegalNotice";
+import Privacy from "./pages/Legal/Privacy";
+import Terms from "./pages/Legal/Terms";
 import Tips from "./pages/Admin/Tips/Tips";
 import Tasks from "./pages/Admin/Tasks/Tasks";
 import ProtectedRoute from "./auth/ProtectedRoute";
@@ -21,6 +24,9 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <Home /> },
+      { path: "legal-notice", element: <LegalNotice /> },
+      { path: "privacy", element: <Privacy /> },
+      { path: "terms", element: <Terms /> },
       {
         element: <ProtectedRoute />,
         children: [

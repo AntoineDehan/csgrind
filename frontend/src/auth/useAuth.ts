@@ -7,6 +7,7 @@ import {
   resendVerification,
   type Credentials,
 } from "../services/auth";
+import { deleteAccount } from "../services/user";
 import { getToken, setToken, clearToken } from "../lib/token";
 
 export function useUser() {
@@ -53,4 +54,15 @@ export function useLogout() {
     clearToken();
     queryClient.setQueryData(["me"], null);
   };
+}
+
+export function useDeleteAccount() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (userId: string) => deleteAccount(userId),
+    onSuccess: () => {
+      clearToken();
+      queryClient.clear();
+    },
+  });
 }
