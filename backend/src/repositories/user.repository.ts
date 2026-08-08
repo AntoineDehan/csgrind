@@ -39,6 +39,13 @@ export function linkSteamAccount(userId: string, steam64Id: string) {
   return prisma.user.update({ where: { id: userId }, data: { steam64Id } });
 }
 
+export function markEmailVerified(userId: string) {
+  return prisma.user.update({
+    where: { id: userId },
+    data: { emailVerified: true },
+  });
+}
+
 export function deleteUser(id: string) {
   return prisma.user.delete({ where: { id } });
 }

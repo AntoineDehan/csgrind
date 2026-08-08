@@ -1,7 +1,12 @@
 import type { Request, Response } from "express";
 import * as authHandler from "../handlers/auth.handler";
 import * as userRepo from "../repositories/user.repository";
-import { registerUserSchema, loginUserSchema } from "../schemas/auth.schema";
+import {
+  registerUserSchema,
+  loginUserSchema,
+  verifyEmailSchema,
+  resendVerificationSchema,
+} from "../schemas/auth.schema";
 import { NotFoundError, UnauthorizedError } from "../errors/AppError";
 
 export async function register(req: Request, res: Response) {
@@ -15,6 +20,18 @@ export async function login(req: Request, res: Response) {
   const data = loginUserSchema.parse(req.body);
   const token = await authHandler.loginUser(data);
   res.json({ token });
+}
+
+export async function verifyEmail(req: Request, res: Response) {
+  const data = verifyEmailSchema.parse(req.body);
+  await authHandler.verifyEmail(data.token);
+  res.json({ message: "Email verified" });
+}
+
+export async function resendVerification(req: Request, res: Response) {
+  const data = resendVerificationSchema.parse(req.body);
+  await authHandler.resendVerification(data.email);
+  res.json({ message: "If that address needs verifying, a link is on its way" });
 }
 
 export async function me(req: Request, res: Response) {
