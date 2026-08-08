@@ -7,6 +7,16 @@ type ApiErrorBody = {
   message?: string;
 };
 
+export class ApiError extends Error {
+  status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
+
 export async function apiFetch<T>(
   path: string,
   options: RequestInit = {},
@@ -29,7 +39,7 @@ export async function apiFetch<T>(
 
   if (!res.ok) {
     const body = (await res.json().catch(() => null)) as ApiErrorBody | null;
-    throw new Error(body?.message ?? `API error ${res.status}`);
+    throw new ApiError(body?.message ?? `API error ${res.status}`, res.status);
   }
 
   if (res.status === 204) {

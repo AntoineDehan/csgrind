@@ -1,7 +1,8 @@
 import { useForm } from "@tanstack/react-form";
 import { useNavigate } from "react-router-dom";
 import { loginUserSchema } from "@backend/schemas/auth.schema";
-import { useLogin } from "../auth/useAuth";
+import { useLogin, useResendVerification } from "../auth/useAuth";
+import { ApiError } from "../lib/api";
 import Link from "../components/ui/Link/Link";
 import Input from "../components/ui/Input/Input";
 import Button from "../components/ui/Button/Button";
@@ -26,6 +27,10 @@ function fieldError(errors: unknown[]): string {
 export default function Login() {
   const navigate = useNavigate();
   const mutation = useLogin();
+  const resend = useResendVerification();
+
+  const needsVerification =
+    mutation.error instanceof ApiError && mutation.error.status === 403;
 
   const form = useForm({
     defaultValues: { email: "", password: "" },
@@ -108,8 +113,30 @@ export default function Login() {
               )}
             </form.Field>
 
-            {mutation.error && (
+            {mutation.error && !needsVerification && (
               <Alert variant="error">{mutation.error.message}</Alert>
+            )}
+
+            {needsVerification && (
+              <Alert variant="warning">
+                <div className="flex flex-col items-start gap-2">
+                  <Text size="small">
+                    {resend.isSuccess
+                      ? "If that address needs verifying, a new link is on its way."
+                      : "Confirm your email address before logging in. Check your inbox for the link we sent when you signed up."}
+                  </Text>
+                  {!resend.isSuccess && (
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      disabled={resend.isPending}
+                      onClick={() => resend.mutate(form.getFieldValue("email"))}
+                    >
+                      {resend.isPending ? "Sending…" : "Send a new link"}
+                    </Button>
+                  )}
+                </div>
+              </Alert>
             )}
 
             <Button type="submit" variant="cta" disabled={mutation.isPending}>

@@ -1,5 +1,6 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import Navbar, { type NavItem } from "../components/ui/Navbar/Navbar";
+import Footer from "../components/ui/Footer/Footer";
 import { useUser, useLogout } from "../auth/useAuth";
 
 export default function Layout() {
@@ -43,11 +44,12 @@ export default function Layout() {
       ];
 
   return (
-    <div>
+    <div className="flex min-h-screen flex-col">
       <Navbar aside={aside} />
-      <main>
+      <main className="flex-1">
         <Outlet />
       </main>
+      <Footer />
     </div>
   );
 }

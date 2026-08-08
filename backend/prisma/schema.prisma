@@ -16,6 +16,7 @@ model User {
   steam64Id String?  @unique @map("steam64_id") @db.VarChar(17)
   image     String?  @db.VarChar(500)
   role Roles @default(USER)
+  emailVerified Boolean @default(false) @map("email_verified")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

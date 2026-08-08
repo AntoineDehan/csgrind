@@ -8,6 +8,12 @@ const router = Router();
 
 router.post("/register", authLimiter, authController.register);
 router.post("/login", loginLimiter, authController.login);
+router.post("/verify-email", authLimiter, authController.verifyEmail);
+router.post(
+  "/verify-email/resend",
+  authLimiter,
+  authController.resendVerification,
+);
 router.get("/me", authenticate, authController.me);
 
 router.get("/steam", authenticate, steamController.startSteamLink);
