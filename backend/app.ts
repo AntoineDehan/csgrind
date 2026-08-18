@@ -16,6 +16,7 @@ import reportRouter from "./src/routes/report";
 
 const app = express();
 const port = env.PORT;
+app.set("trust proxy", 1);
 
 app.use(helmet());
 app.use(cors({ origin: env.SITE_URL }));
