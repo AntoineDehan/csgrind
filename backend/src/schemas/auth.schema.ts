@@ -4,7 +4,7 @@ import { createUserSchema } from "./user.schema";
 export const registerUserSchema = createUserSchema;
 
 export const loginUserSchema = z.object({
-  email: z.email(),
+  email: z.email().toLowerCase(),
   password: z.string().min(1),
 });
 
@@ -13,7 +13,7 @@ export const verifyEmailSchema = z.object({
 });
 
 export const resendVerificationSchema = z.object({
-  email: z.email(),
+  email: z.email().toLowerCase(),
 });
 
 export type RegisterUserInput = z.infer<typeof registerUserSchema>;

@@ -2,7 +2,7 @@ import type { Report, Goal } from "../../generated/prisma/client";
 import * as reportRepo from "../repositories/report.repository";
 import * as goalRepo from "../repositories/goal.repository";
 import { compareReports } from "../comparators/report_comparator";
-import { addDays, FREQUENCY_DAYS } from "../lib/reportFrequency";
+import { nextReportDate } from "../lib/reportFrequency";
 
 export async function completeGoalIfReached(
   userId: string,
@@ -54,7 +54,7 @@ export async function getGoalStats(goal: Goal) {
   }
 
   const base = last?.createdAt ?? goal.createdAt;
-  const nextReportAt = addDays(base, FREQUENCY_DAYS[goal.reportFrequency]);
+  const nextReportAt = nextReportDate(base, goal.reportFrequency);
 
   return { startElo, currentElo, objectiveElo, percent, nextReportAt };
 }

@@ -47,6 +47,12 @@ function num(value: unknown): number | null {
   return value == null ? null : Number(value);
 }
 
+const WINRATE_DECIMALS = 4;
+
+function winrateUnits(value: number): number {
+  return Math.round(value * 10 ** WINRATE_DECIMALS);
+}
+
 function improved(stat: StatKey, ctx: BadgeContext): boolean {
   const prev = num(ctx.previous[stat]);
   const curr = num(ctx.report[stat]);
@@ -73,7 +79,7 @@ export const BADGE_DEFS: BadgeDef[] = [
       const prev = num(ctx.previous.winrate);
       const curr = num(ctx.report.winrate);
       if (prev == null || curr == null) return false;
-      return curr - prev >= points / 100;
+      return winrateUnits(curr) - winrateUnits(prev) >= winrateUnits(points / 100);
     },
   })),
   ...GAMES_TIERS.map((count) => ({

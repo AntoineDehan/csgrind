@@ -1,5 +1,5 @@
 import { checkToUpdateGoal } from "../repositories/goal.repository";
-import { addDays, FREQUENCY_DAYS } from "../lib/reportFrequency";
+import { calendarDay, nextReportDate } from "../lib/reportFrequency";
 import { generateReport } from "../handlers/report.handler";
 import { sendReportNotification } from "../lib/mailer";
 
@@ -7,7 +7,7 @@ type DueGoal = Awaited<ReturnType<typeof checkToUpdateGoal>>[number];
 
 export function isGoalDue(goal: DueGoal, now: Date): boolean {
   const base = goal.lastReportAt ?? goal.createdAt;
-  return addDays(base, FREQUENCY_DAYS[goal.reportFrequency]) <= now;
+  return nextReportDate(base, goal.reportFrequency) <= calendarDay(now);
 }
 
 export async function runReportScheduler() {
