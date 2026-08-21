@@ -12,7 +12,6 @@ export const createGoalSchema = z.object({
   matchmaking: z.enum(["FACEIT", "PREMIER"]),
   eloGoal: z.number().int(),
   endDate: z.coerce.date().optional(),
-  status: z.enum(["in_progress", "completed", "abandoned"]).optional(),
   reportFrequency: z.enum(reportFrequencyValues).optional(),
 });
 

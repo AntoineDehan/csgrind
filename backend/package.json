@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "tsx watch app.ts",
     "start": "tsx app.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest",
+    "test:run": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [],
@@ -26,7 +27,8 @@
     "@types/pg": "^8.20.0",
     "prisma": "^6.19.3",
     "tsx": "^4.22.3",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.11"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^6.19.3",
