@@ -10,6 +10,9 @@ const envSchema = z.object({
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
   JWT_SECRET: z.string().min(32, "JWT_SECRET must be at least 32 characters"),
 
+  MONGO_URL: z.string().min(1).optional(),
+  MONGO_DB: z.string().min(1).default("csgrind_logs"),
+
   SITE_URL: z.url().default("http://localhost:5173"),
 
   STEAM_REALM: z.url(),

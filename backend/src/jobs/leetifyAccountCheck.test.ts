@@ -4,6 +4,7 @@ import { findUsersWithSteam } from "../repositories/user.repository";
 import { deleteReportsByUser } from "../repositories/report.repository";
 import { checkLeetifyProfileExists } from "../lib/leetify";
 import type { LeetifyProfileStatus } from "../lib/leetify";
+import { recordJobRun } from "../repositories/jobRun.repository";
 
 vi.mock("../repositories/user.repository", () => ({
   findUsersWithSteam: vi.fn(),
@@ -13,6 +14,10 @@ vi.mock("../repositories/report.repository", () => ({
   deleteReportsByUser: vi.fn(),
 }));
 
+vi.mock("../repositories/jobRun.repository", () => ({
+  recordJobRun: vi.fn(),
+}));
+
 vi.mock("../lib/leetify", () => ({
   checkLeetifyProfileExists: vi.fn(),
 }));
@@ -20,6 +25,7 @@ vi.mock("../lib/leetify", () => ({
 const findUsers = vi.mocked(findUsersWithSteam);
 const deleteReports = vi.mocked(deleteReportsByUser);
 const checkProfile = vi.mocked(checkLeetifyProfileExists);
+const recordRun = vi.mocked(recordJobRun);
 
 function givenUsers(...users: { id: string; steam64Id: string | null }[]) {
   findUsers.mockResolvedValue(users);
@@ -40,6 +46,7 @@ function givenStatusPerSteamId(statuses: Record<string, LeetifyProfileStatus>) {
 beforeEach(() => {
   vi.clearAllMocks();
   deleteReports.mockResolvedValue({ count: 0 });
+  recordRun.mockResolvedValue(undefined);
   vi.spyOn(console, "log").mockImplementation(() => {});
   vi.spyOn(console, "error").mockImplementation(() => {});
 });
@@ -184,5 +191,27 @@ describe("runLeetifyAccountCheck", () => {
       expect(deleteReports).not.toHaveBeenCalled();
       expect(result).toEqual({ checked: 0, purged: 0, skipped: 0 });
     });
+  });
+
+  describe("run journal", () => {
+    it("records the counters of the run", async () => {
+      givenUsers(
+        { id: "gone-1", steam64Id: "76561198000000001" },
+        { id: "alive-1", steam64Id: "76561198000000002" },
+      );
+      givenStatusPerSteamId({
+        "76561198000000001": "gone",
+        "76561198000000002": "exists",
+      });
+
+      await runLeetifyAccountCheck();
+
+      expect(recordRun).toHaveBeenCalledExactlyOnceWith({
+        job: "leetify-account-check",
+        startedAt: expect.any(Date),
+        result: { checked: 2, purged: 1, skipped: 0 },
+      });
+    });
+
   });
 });

@@ -17,6 +17,18 @@ services:
       timeout: 5s
       retries: 5
 
+  mongo:
+    image: mongo:8
+    container_name: csgrind-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+
   backend:
     build:
       context: ./backend
@@ -26,6 +38,7 @@ services:
       - ./backend/.env
     environment:
       DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}?schema=public
+      MONGO_URL: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongo:27017/?authSource=admin
       SITE_URL: http://localhost:8080
     ports:
       - "3000:3000"
@@ -48,3 +61,4 @@ services:
 
 volumes:
   pgdata:
+  mongodata:

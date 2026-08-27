@@ -2,6 +2,7 @@ import { checkToUpdateGoal } from "../repositories/goal.repository";
 import { calendarDay, nextReportDate } from "../lib/reportFrequency";
 import { generateReport } from "../handlers/report.handler";
 import { sendReportNotification } from "../lib/mailer";
+import { recordJobRun } from "../repositories/jobRun.repository";
 
 type DueGoal = Awaited<ReturnType<typeof checkToUpdateGoal>>[number];
 
@@ -11,6 +12,7 @@ export function isGoalDue(goal: DueGoal, now: Date): boolean {
 }
 
 export async function runReportScheduler() {
+  const startedAt = new Date();
   const goals = await checkToUpdateGoal();
   const now = new Date();
   const due = goals.filter((g) => isGoalDue(g, now));
@@ -37,6 +39,12 @@ export async function runReportScheduler() {
   console.log(
     `Report scheduler: ${due.length} due, ${succeeded} generated, ${failed} failed`,
   );
+
+  await recordJobRun({
+    job: "report-scheduler",
+    startedAt,
+    result: { due: due.length, succeeded, failed },
+  });
 
   return { due: due.length, succeeded, failed };
 }
