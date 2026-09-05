@@ -4,6 +4,7 @@ import Title from "../../components/ui/Title/Title";
 import Text from "../../components/ui/Text/Text";
 import Loader from "../../components/ui/Loader/Loader";
 import GoalTracker from "../../components/ui/GoalTracker/GoalTracker";
+import LeetifyAttribution from "../../components/ui/LeetifyAttribution/LeetifyAttribution";
 import BadgeContainer from "../../components/ui/BadgeContainer/BadgeContainer";
 import Badge from "../../components/ui/Badge/Badge";
 import ProfileContainer from "./components/ProfileContainer/ProfileContainer";
@@ -61,6 +62,7 @@ export default function Profile() {
         </div>
 
         <div className="flex-1">
+          <LeetifyAttribution />
           {goal ? (
             <GoalTracker
               objective={goal.matchmaking}
