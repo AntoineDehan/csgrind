@@ -9,6 +9,7 @@ import Title from "../components/ui/Title/Title";
 import Text from "../components/ui/Text/Text";
 import Button from "../components/ui/Button/Button";
 import GoalTracker from "../components/ui/GoalTracker/GoalTracker";
+import LeetifyAttribution from "../components/ui/LeetifyAttribution/LeetifyAttribution";
 import TaskList from "../components/ui/TaskList/TaskList";
 import StatCompare from "../components/ui/StatCompare/StatCompare";
 import StatCompareContainer from "../components/ui/StatCompareContainer/StatCompareContainer";
@@ -141,6 +142,7 @@ export default function Dashboard() {
           </div>
         ) : (
           <>
+            <LeetifyAttribution />
             <section>
               <div className="flex items-center justify-between">
                 <Title level="h2">Your goal</Title>
