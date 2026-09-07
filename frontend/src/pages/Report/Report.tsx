@@ -7,7 +7,6 @@ import Button from "../../components/ui/Button/Button";
 import StatCompare from "../../components/ui/StatCompare/StatCompare";
 import StatCompareContainer from "../../components/ui/StatCompareContainer/StatCompareContainer";
 import { useReport } from "../../hooks/useReports";
-import { useUser } from "../../auth/useAuth";
 import {
   STAT_FIELDS,
   formatStat,
@@ -25,7 +24,7 @@ import { formatDate } from "@/lib/date";
 import PosStat from "./components/posStat";
 import Dot from "@/components/ui/Dot/Dot";
 import Section from "@/components/ui/Section/Section";
-import leetifyLogo from "../../assets/Leetify.png";
+import LeetifyAttribution from "@/components/ui/LeetifyAttribution/LeetifyAttribution";
 
 const AIM_GROUP: string[] = [
   "aimRating",
@@ -58,7 +57,6 @@ export default function Report() {
   const { reportId } = useParams();
   const navigate = useNavigate();
   const { data: report, isLoading, error } = useReport(reportId);
-  const { data: user } = useUser();
   const { data: userBadges } = useUserBadges();
   const { data: allBadges } = useBadges();
 
@@ -149,28 +147,7 @@ export default function Report() {
             <span className="colored-text">Keep Grinding.</span>
           </Title>
         </div>
-        <div className="flex justify-between items-end mb-2 mt-2">
-          <a href="https://leetify.com/">
-            <img
-              src={leetifyLogo}
-              alt="Powered by Leetify"
-              className="h-8 w-auto "
-            />
-          </a>
-          <a
-            href={
-              user?.steam64Id
-                ? `https://leetify.com/app/profile/${user.steam64Id}`
-                : "https://leetify.com/"
-            }
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Text size="small" color="leetify" className="underline">
-              View on Leetify
-            </Text>
-          </a>
-        </div>
+        <LeetifyAttribution />
 
         {report.progress && (
           <GoalTracker

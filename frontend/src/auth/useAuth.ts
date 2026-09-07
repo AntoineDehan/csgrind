@@ -23,9 +23,12 @@ export function useLogin() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: login,
-    onSuccess: ({ token }) => {
+    onSuccess: async ({ token }) => {
       setToken(token);
-      queryClient.invalidateQueries({ queryKey: ["me"] });
+      await queryClient.invalidateQueries({
+        queryKey: ["me"],
+        refetchType: "all",
+      });
     },
   });
 }
