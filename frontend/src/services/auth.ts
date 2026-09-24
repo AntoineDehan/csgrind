@@ -37,6 +37,20 @@ export function resendVerification(email: string) {
   });
 }
 
+export function forgotPassword(email: string) {
+  return apiFetch<{ message: string }>("/auth/password/forgot", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+}
+
+export function resetPassword(token: string, password: string) {
+  return apiFetch<{ message: string }>("/auth/password/reset", {
+    method: "POST",
+    body: JSON.stringify({ token, password }),
+  });
+}
+
 export async function getMe(): Promise<User> {
   const data = await apiFetch<unknown>("/auth/me");
   return userSchema.parse(data);

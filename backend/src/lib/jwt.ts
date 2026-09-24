@@ -1,11 +1,16 @@
 import jwt from "jsonwebtoken";
 import { env } from "../config/env";
 
-export type TokenPurpose = "session" | "steam_link" | "email_verify";
+export type TokenPurpose =
+  | "session"
+  | "steam_link"
+  | "email_verify"
+  | "password_reset";
 
 export type TokenPayload = {
   userId: string;
   purpose: TokenPurpose;
+  pwd?: string;
 };
 
 export function signToken(userId: string): string {
@@ -24,6 +29,17 @@ export function signTokenEmailVerify(userId: string): string {
   return jwt.sign({ userId, purpose: "email_verify" }, env.JWT_SECRET, {
     expiresIn: "24h",
   });
+}
+
+export function signTokenPasswordReset(
+  userId: string,
+  passwordFingerprint: string,
+): string {
+  return jwt.sign(
+    { userId, purpose: "password_reset", pwd: passwordFingerprint },
+    env.JWT_SECRET,
+    { expiresIn: "1h" },
+  );
 }
 
 export function verifyToken(token: string): TokenPayload {

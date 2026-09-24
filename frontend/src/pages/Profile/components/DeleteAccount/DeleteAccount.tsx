@@ -43,7 +43,7 @@ export default function DeleteAccount({ userId }: DeleteAccountProps) {
             <Text size="small">Are you sure?</Text>
             <Button
               type="button"
-              variant="cta"
+              variant="destructive"
               disabled={mutation.isPending}
               onClick={handleDelete}
             >
@@ -61,7 +61,7 @@ export default function DeleteAccount({ userId }: DeleteAccountProps) {
         ) : (
           <Button
             type="button"
-            variant="secondary"
+            variant="destructive"
             onClick={() => setConfirming(true)}
           >
             Delete my account

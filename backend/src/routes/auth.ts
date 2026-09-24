@@ -14,6 +14,8 @@ router.post(
   authLimiter,
   authController.resendVerification,
 );
+router.post("/password/forgot", authLimiter, authController.forgotPassword);
+router.post("/password/reset", authLimiter, authController.resetPassword);
 router.get("/me", authenticate, authController.me);
 
 router.get("/steam", authenticate, steamController.startSteamLink);

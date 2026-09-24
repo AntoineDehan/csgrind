@@ -24,6 +24,13 @@ export function findUserByEmail(email: string) {
   });
 }
 
+export function findUserWithPasswordById(id: string) {
+  return prisma.user.findUnique({
+    where: { id },
+    omit: { password: false },
+  });
+}
+
 export function createUser(data: Prisma.UserCreateInput) {
   return prisma.user.create({ data });
 }
@@ -43,6 +50,13 @@ export function markEmailVerified(userId: string) {
   return prisma.user.update({
     where: { id: userId },
     data: { emailVerified: true },
+  });
+}
+
+export function updatePassword(userId: string, password: string) {
+  return prisma.user.update({
+    where: { id: userId },
+    data: { password, emailVerified: true },
   });
 }
 

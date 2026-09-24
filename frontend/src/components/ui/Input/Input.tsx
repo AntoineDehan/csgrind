@@ -11,6 +11,7 @@ type InputProps = Pick<
   | "disabled"
   | "name"
   | "required"
+  | "aria-required"
   | "id"
   | "autoComplete"
   | "aria-label"

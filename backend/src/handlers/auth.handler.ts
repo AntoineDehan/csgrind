@@ -1,12 +1,21 @@
+import { createHash } from "node:crypto";
 import bcrypt from "bcrypt";
 import {
   createUser,
   findUserByEmail,
+  findUserWithPasswordById,
   markEmailVerified,
+  updatePassword,
 } from "../repositories/user.repository";
 import type { RegisterUserInput, LoginUserInput } from "../schemas/auth.schema";
-import { signToken, signTokenEmailVerify, verifyToken } from "../lib/jwt";
-import { sendVerificationEmail } from "../lib/mailer";
+import {
+  signToken,
+  signTokenEmailVerify,
+  signTokenPasswordReset,
+  verifyToken,
+  type TokenPayload,
+} from "../lib/jwt";
+import { sendPasswordResetEmail, sendVerificationEmail } from "../lib/mailer";
 import {
   BadRequestError,
   ForbiddenError,
@@ -50,6 +59,43 @@ export async function resendVerification(email: string) {
   } catch (error) {
     console.error(`Verification email failed for user ${user.id}:`, error);
   }
+}
+
+function passwordFingerprint(passwordHash: string): string {
+  return createHash("sha256").update(passwordHash).digest("hex").slice(0, 16);
+}
+
+export async function requestPasswordReset(email: string) {
+  const user = await findUserByEmail(email);
+  if (!user) return;
+
+  const token = signTokenPasswordReset(
+    user.id,
+    passwordFingerprint(user.password),
+  );
+
+  sendPasswordResetEmail(user.email, token).catch((error) => {
+    console.error(`Password reset email failed for user ${user.id}:`, error);
+  });
+}
+
+export async function resetPassword(token: string, password: string) {
+  const invalidLink = new BadRequestError("This link is invalid or has expired");
+
+  let payload: TokenPayload;
+  try {
+    payload = verifyToken(token);
+  } catch {
+    throw invalidLink;
+  }
+  if (payload.purpose !== "password_reset") throw invalidLink;
+
+  const user = await findUserWithPasswordById(payload.userId);
+  if (!user || payload.pwd !== passwordFingerprint(user.password))
+    throw invalidLink;
+
+  const hash = await bcrypt.hash(password, 10);
+  await updatePassword(user.id, hash);
 }
 
 export async function loginUser(payload: LoginUserInput) {
