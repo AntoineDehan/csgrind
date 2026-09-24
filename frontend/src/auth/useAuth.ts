@@ -5,6 +5,8 @@ import {
   getMe,
   verifyEmail,
   resendVerification,
+  forgotPassword,
+  resetPassword,
   type Credentials,
 } from "../services/auth";
 import { deleteAccount } from "../services/user";
@@ -48,6 +50,19 @@ export function useVerifyEmail() {
 export function useResendVerification() {
   return useMutation({
     mutationFn: (email: string) => resendVerification(email),
+  });
+}
+
+export function useForgotPassword() {
+  return useMutation({
+    mutationFn: (email: string) => forgotPassword(email),
+  });
+}
+
+export function useResetPassword() {
+  return useMutation({
+    mutationFn: ({ token, password }: { token: string; password: string }) =>
+      resetPassword(token, password),
   });
 }
 

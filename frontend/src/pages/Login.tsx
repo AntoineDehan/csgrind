@@ -1,5 +1,5 @@
 import { useForm } from "@tanstack/react-form";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { loginUserSchema } from "@backend/schemas/auth.schema";
 import { useLogin, useResendVerification } from "../auth/useAuth";
 import { ApiError } from "../lib/api";
@@ -26,6 +26,8 @@ function fieldError(errors: unknown[]): string {
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const passwordReset = location.state?.passwordReset === true;
   const mutation = useLogin();
   const resend = useResendVerification();
 
@@ -61,15 +63,26 @@ export default function Login() {
               form.handleSubmit();
             }}
           >
+            <Text size="xsmall" color="secondary">
+              <Text span size="xsmall" color="destructive">
+                *
+              </Text>{" "}
+              Required field
+            </Text>
+
             <form.Field name="email">
               {(field) => (
                 <div className="flex flex-col gap-1">
                   <label htmlFor={field.name} className="text-sm">
-                    Email
+                    Email{" "}
+                    <Text span size="small" color="destructive">
+                      *
+                    </Text>
                   </label>
                   <Input
                     id={field.name}
                     name={field.name}
+                    aria-required
                     type="email"
                     autoComplete="email"
                     placeholder="you@example.com"
@@ -79,9 +92,9 @@ export default function Login() {
                   />
                   {field.state.meta.isTouched &&
                     field.state.meta.errors.length > 0 && (
-                      <span className="text-sm text-destructive">
+                      <Text size="small" color="destructive">
                         {fieldError(field.state.meta.errors)}
-                      </span>
+                      </Text>
                     )}
                 </div>
               )}
@@ -90,12 +103,23 @@ export default function Login() {
             <form.Field name="password">
               {(field) => (
                 <div className="flex flex-col gap-1">
-                  <label htmlFor={field.name} className="text-sm">
-                    Password
-                  </label>
+                  <div className="flex items-center justify-between">
+                    <label htmlFor={field.name} className="text-sm">
+                      Password{" "}
+                      <Text span size="small" color="destructive">
+                        *
+                      </Text>
+                    </label>
+                    <Link to="/forgot-password">
+                      <Text span size="small">
+                        Forgot password?
+                      </Text>
+                    </Link>
+                  </div>
                   <Input
                     id={field.name}
                     name={field.name}
+                    aria-required
                     type="password"
                     autoComplete="current-password"
                     placeholder="••••••••"
@@ -105,13 +129,19 @@ export default function Login() {
                   />
                   {field.state.meta.isTouched &&
                     field.state.meta.errors.length > 0 && (
-                      <span className="text-sm text-destructive">
+                      <Text size="small" color="destructive">
                         {fieldError(field.state.meta.errors)}
-                      </span>
+                      </Text>
                     )}
                 </div>
               )}
             </form.Field>
+
+            {passwordReset && !mutation.error && (
+              <Alert variant="success">
+                Your password has been updated. Log in with your new password.
+              </Alert>
+            )}
 
             {mutation.error && !needsVerification && (
               <Alert variant="error">{mutation.error.message}</Alert>

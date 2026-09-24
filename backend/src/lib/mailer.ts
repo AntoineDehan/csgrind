@@ -61,6 +61,33 @@ function verificationEmailHtml(verifyUrl: string): string {
 </html>`;
 }
 
+function passwordResetEmailHtml(resetUrl: string): string {
+  return `<!doctype html>
+<html lang="en">
+  <body style="margin:0;padding:32px 16px;background-color:#131419;font-family:Helvetica,Arial,sans-serif;">
+    <div style="max-width:520px;margin:0 auto;background-color:#1b1d24;border:1px solid #33353d;border-radius:12px;padding:32px;">
+      <p style="margin:0 0 8px;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#53ca65;">
+        Reset your password
+      </p>
+      <h1 style="margin:0 0 16px;font-size:22px;line-height:1.3;color:#fbfaf6;">
+        Pick a new password.
+      </h1>
+      <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#d8d4cb;">
+        Someone asked to reset the password of your csgrind account. This link
+        expires in 1 hour and works only once.
+      </p>
+      <a href="${resetUrl}"
+         style="display:inline-block;padding:12px 24px;border-radius:8px;background-color:#53ca65;color:#131419;font-size:15px;font-weight:bold;text-decoration:none;">
+        Reset my password
+      </a>
+      <p style="margin:24px 0 0;font-size:13px;line-height:1.6;color:#6b6375;">
+        If you did not ask for this, ignore this email. Your password stays the same.
+      </p>
+    </div>
+  </body>
+</html>`;
+}
+
 export async function sendVerificationEmail(to: string, token: string) {
   if (!resend) {
     console.warn("RESEND_API is not configured, skipping verification email");
@@ -75,6 +102,27 @@ export async function sendVerificationEmail(to: string, token: string) {
     subject: "Confirm your csgrind email",
     text: `Confirm this address to activate your csgrind account.\n\nThis link expires in 24 hours: ${verifyUrl}\n\nIf you did not create an account, ignore this email.`,
     html: verificationEmailHtml(verifyUrl),
+  });
+
+  if (error) {
+    throw new Error(`Email send failed: ${error.message}`);
+  }
+}
+
+export async function sendPasswordResetEmail(to: string, token: string) {
+  if (!resend) {
+    console.warn("RESEND_API is not configured, skipping password reset email");
+    return;
+  }
+
+  const resetUrl = `${env.SITE_URL}/reset-password?token=${token}`;
+
+  const { error } = await resend.emails.send({
+    from: env.MAIL_FROM,
+    to,
+    subject: "Reset your csgrind password",
+    text: `Someone asked to reset the password of your csgrind account.\n\nThis link expires in 1 hour and works only once: ${resetUrl}\n\nIf you did not ask for this, ignore this email. Your password stays the same.`,
+    html: passwordResetEmailHtml(resetUrl),
   });
 
   if (error) {
