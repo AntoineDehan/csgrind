@@ -8,6 +8,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import SteamLink from "./pages/SteamLink/SteamLink";
 import VerifyEmail from "./pages/VerifyEmail";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile/Profile";
 import LegalNotice from "./pages/Legal/LegalNotice";
@@ -50,4 +52,6 @@ export const router = createBrowserRouter([
   { path: "/register", element: <Register /> },
   { path: "/steam-link", element: <SteamLink /> },
   { path: "/verify-email", element: <VerifyEmail /> },
+  { path: "/forgot-password", element: <ForgotPassword /> },
+  { path: "/reset-password", element: <ResetPassword /> },
 ]);

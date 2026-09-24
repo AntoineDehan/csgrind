@@ -1,7 +1,7 @@
 import type { ReactNode, MouseEventHandler } from "react";
 import styles from "./button.module.css";
 
-type Variant = "normal" | "secondary" | "cta";
+type Variant = "normal" | "secondary" | "cta" | "destructive";
 
 type ButtonProps = {
   children?: ReactNode;

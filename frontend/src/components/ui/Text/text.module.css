@@ -51,3 +51,7 @@
 .color--leetify {
   color: var(--color-leetify);
 }
+
+.color--destructive {
+  color: var(--color-destructive);
+}

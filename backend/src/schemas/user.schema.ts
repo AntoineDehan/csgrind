@@ -1,11 +1,13 @@
 import { z } from "zod";
 
+export const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters long")
+  .max(72, "Password must be at most 72 characters");
+
 export const createUserSchema = z.object({
   email: z.email().toLowerCase(),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters long")
-    .max(72, "Password must be at most 72 characters"),
+  password: passwordSchema,
 });
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;

@@ -6,6 +6,8 @@ import {
   loginUserSchema,
   verifyEmailSchema,
   resendVerificationSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
 } from "../schemas/auth.schema";
 import { NotFoundError, UnauthorizedError } from "../errors/AppError";
 
@@ -32,6 +34,20 @@ export async function resendVerification(req: Request, res: Response) {
   const data = resendVerificationSchema.parse(req.body);
   await authHandler.resendVerification(data.email);
   res.json({ message: "If that address needs verifying, a link is on its way" });
+}
+
+export async function forgotPassword(req: Request, res: Response) {
+  const data = forgotPasswordSchema.parse(req.body);
+  await authHandler.requestPasswordReset(data.email);
+  res.json({
+    message: "If an account exists for that address, a reset link is on its way",
+  });
+}
+
+export async function resetPassword(req: Request, res: Response) {
+  const data = resetPasswordSchema.parse(req.body);
+  await authHandler.resetPassword(data.token, data.password);
+  res.json({ message: "Password updated" });
 }
 
 export async function me(req: Request, res: Response) {
