@@ -53,3 +53,11 @@
   color: var(--color-brand-foreground);
   border-color: var(--color-background-secondary-border);
 }
+
+.button--destructive {
+  padding: 0.35rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: var(--color-destructive);
+  color: var(--color-destructive-foreground);
+}

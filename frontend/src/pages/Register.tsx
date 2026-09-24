@@ -85,15 +85,26 @@ export default function Register() {
               form.handleSubmit();
             }}
           >
+            <Text size="xsmall" color="secondary">
+              <Text span size="xsmall" color="destructive">
+                *
+              </Text>{" "}
+              Required field
+            </Text>
+
             <form.Field name="email">
               {(field) => (
                 <div className="flex flex-col gap-1">
                   <label htmlFor={field.name} className="text-sm">
-                    Email
+                    Email{" "}
+                    <Text span size="small" color="destructive">
+                      *
+                    </Text>
                   </label>
                   <Input
                     id={field.name}
                     name={field.name}
+                    aria-required
                     type="email"
                     autoComplete="email"
                     placeholder="you@example.com"
@@ -103,9 +114,9 @@ export default function Register() {
                   />
                   {field.state.meta.isTouched &&
                     field.state.meta.errors.length > 0 && (
-                      <span className="text-sm text-destructive">
+                      <Text size="small" color="destructive">
                         {fieldError(field.state.meta.errors)}
-                      </span>
+                      </Text>
                     )}
                 </div>
               )}
@@ -115,11 +126,15 @@ export default function Register() {
               {(field) => (
                 <div className="flex flex-col gap-1">
                   <label htmlFor={field.name} className="text-sm">
-                    Password
+                    Password{" "}
+                    <Text span size="small" color="destructive">
+                      *
+                    </Text>
                   </label>
                   <Input
                     id={field.name}
                     name={field.name}
+                    aria-required
                     type="password"
                     autoComplete="new-password"
                     placeholder="At least 8 characters"
@@ -129,9 +144,9 @@ export default function Register() {
                   />
                   {field.state.meta.isTouched &&
                     field.state.meta.errors.length > 0 && (
-                      <span className="text-sm text-destructive">
+                      <Text size="small" color="destructive">
                         {fieldError(field.state.meta.errors)}
-                      </span>
+                      </Text>
                     )}
                 </div>
               )}
